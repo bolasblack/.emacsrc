@@ -1,0 +1,8 @@
+(:name emacs-color-theme-solarized
+       :description "Emacs highlighting using Ethan Schoonover’s Solarized color scheme 
+http://ethanschoonover.com/solarized"
+       :type github
+       :branch "master"
+       :pkgname "sellout/emacs-color-theme-solarized"
+       :prepare (add-to-list 'custom-theme-load-path default-directory)
+)
