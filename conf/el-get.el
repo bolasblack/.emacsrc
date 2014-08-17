@@ -29,6 +29,8 @@
 
 (setq my-packages
       (append
+       ;; magit
+       '(magit)
        ;; anything
        '(anything init-anything)
        ;; 各种 yasnippet
