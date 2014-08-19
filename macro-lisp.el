@@ -140,44 +140,4 @@ well as the last word of the previous line."
       (define-keys global-map
         `(([backtab] my-unindent)))))
 
-
-
-
-
-
-;; ** lib **
-
-(defun eval-body (forms)
-  (when (listp forms)
-    (if (functionp (car forms))
-        (eval-body (eval forms))
-      (dolist (form forms)
-        (eval-body form)))))
-
-;; 如果是在 emacs-daemon 下，则在 after-make-frame-functions 事件后运行函数
-(defmacro daemon-run (&rest body)
-  "run func `after-make-frame-functions' if emacs daemon
-
-\(fn (origin-form) (another-form) ...)"
-  `(message "daemon-running")
-  `(if (and (fboundp 'daemonp) (daemonp))
-       (add-hook 'after-make-frame-functions
-                 (function (lambda (frame)
-                             (with-selected-frame frame
-                               (eval-body ',body)))))
-     (eval-body ',body)))
-
-;; (print x(macroexpand '(daemon-run (blink-cursor-mode nil))))
-
-;; (eval-body '((blink-cursor-mode nil)))
-;; (print (macroexpand '(eval-body '((blink-cursor-mode nil)))))
-;; (print (macroexpand '(eval-body (blink-cursor-mode nil))))
-
-;; (listp '(blink-cursor-mode nil))
-;; (car '(blink-cursor-mode nil))
-
-;; (daemon-run (blink-cursor-mode nil))
-;; (eval (blink-cursor-mode nil))
-;; (listp (car '(blink-cursor-mode nil)))
-
 (provide 'macro-lisp)
