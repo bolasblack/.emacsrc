@@ -15,8 +15,8 @@
                               :after (progn
                                        (ido-mode)
                                        (setq ido-enable-flex-matching t)))
-                       (:name enclose
-                              :after (enclose-global-mode))
+                       (:name autopair
+                              :after (autopair-global-mode))
                        (:name projectile
                               :after (projectile-global-mode))
                        (:name tabbar-ruler
