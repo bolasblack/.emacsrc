@@ -25,6 +25,8 @@
                                        (tabbar-install-faces)))
                        (:name emacs-color-theme-solarized
                               :after (load-theme 'solarized-dark t))
+                       (:name window-numbering
+                              :after (window-numbering-mode))
 ))
 
 (setq my-packages
