@@ -38,9 +38,6 @@
 ;; 没有滚动条 24.1
 (scroll-bar-mode -1)
 
-;; number window 给 buffer 上所有窗口编号
-;(window-numbering-mode t)
-
 ;; 行号 emacs23 支持
 (global-linum-mode t)
 
@@ -67,4 +64,3 @@
 
 (delete-selection-mode -1)
 (setq-default indent-tabs-mode nil)
-

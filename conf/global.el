@@ -3,6 +3,9 @@
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; 文件识别
+(add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
+
 ;; 把 /user/loacl/bin 放入执行目录
 (push "/usr/local/bin" exec-path)
 

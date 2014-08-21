@@ -22,12 +22,11 @@
  `(dir-conf
    ;; 全局设定
    "global.el"
-   ;; El-Get
-   "el-get.el"
+   ;; 一些插件的设置
+   "packages.el"
    ;; 快捷键设置
    "keyboard.el"
    ;; 外观设置
    "face.el"
    )
  )
-

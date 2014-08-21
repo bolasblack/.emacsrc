@@ -5,3 +5,4 @@
 *-ign*
 *.fas
 *.lib
+.cask
