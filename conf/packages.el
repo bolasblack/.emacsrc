@@ -20,11 +20,19 @@
     (setq tabbar-ruler-global-tabbar t)
     (tabbar-install-faces)))
 
-(use-package ido
+(use-package flx-ido
   :init
   (progn
     (ido-mode)
-    (setq ido-enable-flex-matching t)))
+    (ido-everywhere)
+    (flx-ido-mode)
+    (setq ido-enable-flex-matching t)
+    (setq ido-use-faces nil)
+    (bind-key "M-w" 'ido-copy-current-file-name ido-file-completion-map)
+    (bind-key "C-w" 'ido-delete-backward-updir ido-file-completion-map)
+    (bind-key "C-w" 'ido-delete-backward-updir ido-file-dir-completion-map)))
+
+(use-package help-fns+)
 
 (use-package window-numbering
   :init
