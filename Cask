@@ -43,10 +43,12 @@
 (depends-on "flycheck-cask")
 ;; Sublime Text 的多光标模式
 (depends-on "multiple-cursors")
-;; 自动标点配对
+;; 自动标点配对（不只是标点配对）
 (depends-on "smartparens")
 ;; 便捷选区
 (depends-on "expand-region")
+;; 搜索剪贴历史
+(depends-on "browse-kill-ring")
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 

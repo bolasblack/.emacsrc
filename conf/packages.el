@@ -54,3 +54,6 @@
   (progn
     (use-package smartparens-config)
     (smartparens-global-mode)))
+
+(use-package browse-kill-ring
+  :bind ("C-M-y" . browse-kill-ring))
