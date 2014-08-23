@@ -31,6 +31,9 @@
 ;; 键绑定增强
 (depends-on "bind-key")
 (depends-on "use-package")
+;; 增强 Emacs 的帮助系统
+;; http://www.emacswiki.org/emacs/HelpPlus#toc3
+(depends-on "help-fns+")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
