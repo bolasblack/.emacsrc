@@ -18,13 +18,9 @@
 ;; 主题
 (depends-on "color-theme")
 (depends-on "color-theme-solarized")
-;; ido 模式的 M-x
-(depends-on "smex")
 ;; 键绑定增强
 (depends-on "bind-key")
 (depends-on "use-package")
-;; 增强 ido 的模糊搜索功能，并修复了 ido 出现若干个 [No match] 的 BUG
-(depends-on "flx-ido")
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
 (depends-on "help-fns+")
