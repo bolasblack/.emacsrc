@@ -63,9 +63,6 @@
     (use-package smartparens-config)
     (smartparens-global-mode)))
 
-(use-package browse-kill-ring
-  :bind ("C-M-y" . browse-kill-ring))
-
 (use-package git-gutter
   :init
   (progn
@@ -90,3 +87,46 @@
     (global-git-gutter-mode t)
     (git-gutter:linum-setup)
 ))
+
+(use-package helm
+  :init
+  (progn
+    (helm-mode t)
+    (bind-key "C-w" 'kill-region-or-backward-kill-word helm-map)
+    (bind-key "C-M-y" 'helm-show-kill-ring)))
+
+(use-package projectile
+  :init
+  (progn
+    (projectile-global-mode t)
+    (setq projectile-completion-system 'helm)
+    (use-package helm-projectile
+      :bind ("M-p" . helm-projectile))))
+
+(use-package popwin
+  :init
+  (progn
+    ; Config: https://github.com/m2ym/popwin-el#special-display-config
+    (setq popwin:popup-window-height 15)
+
+    (let ((c '(
+               ;; Emacs
+               ("*Procces List*" :height 20)
+               ("*Warnings*" :height 20)
+               ("*Messages*" :height 20)
+               ("*Backtrace*" :height 20)
+               ("*Compile-Log*" :height 20 :noselect t)
+
+               ;; Helm
+               ("*helm*")
+               ("*helm M-x*")
+               ("*helm projectile*")
+               ("*Helm Completions*")
+               ("*helm-mode-find-file*")
+               ("*helm-mode-kill-buffer*")
+               ("*helm-mode-execute-extended-command*")
+               )))
+      (dolist (config c)
+        (push config popwin:special-display-config)))
+
+    (popwin-mode t)))
