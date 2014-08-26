@@ -18,8 +18,8 @@
 
 (load-files
  ;; 一些小函数
- `(dir-rc "macro-lisp.el")
- `(dir-conf
+ '(dir-rc "macro-lisp.el")
+ '(dir-conf
    ;; 全局设定
    "global.el"
    ;; 一些插件的设置

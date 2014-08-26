@@ -105,15 +105,8 @@
                ("*Messages*" :height 20)
                ("*Backtrace*" :height 20)
                ("*Compile-Log*" :height 20 :noselect t)
-
                ;; Helm
-               ("*helm*")
-               ("*helm M-x*")
-               ("*helm projectile*")
-               ("*Helm Completions*")
-               ("*helm-mode-find-file*")
-               ("*helm-mode-kill-buffer*")
-               ("*helm-mode-execute-extended-command*")
+               ("^\*helm.*\*$" :regexp t)
                )))
       (dolist (config c)
         (push config popwin:special-display-config)))
