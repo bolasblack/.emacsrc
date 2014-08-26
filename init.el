@@ -1,5 +1,5 @@
 ;; .emacs.d 文件地址
-(defconst dir-rc "~/.emacsrc/")
+(defconst dir-rc (expand-file-name "~/.emacsrc/"))
 ;; Emacs 配置文件地址
 (defconst dir-conf (concat dir-rc "conf/"))
 ;; Emacs 配色文件地址

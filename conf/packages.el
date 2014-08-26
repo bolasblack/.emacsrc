@@ -1,7 +1,8 @@
 
-(let ((cask-paths (split-string (shell-command-to-string "cask load-path") ":")))
-  (dolist (path cask-paths)
-    (add-to-list 'load-path path)))
+(let ((cask-command (format "cask --path '%s' load-path" dir-rc)))
+  (let ((cask-paths (split-string (shell-command-to-string cask-command) ":")))
+    (dolist (path cask-paths)
+      (add-to-list 'load-path path))))
 
 (require 'cask)
 (cask-initialize "~/.emacsrc")
