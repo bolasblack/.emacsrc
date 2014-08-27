@@ -63,3 +63,6 @@
 (depends-on "coffee-mode")
 ;; 编辑 html 模板时执行多种高亮的主模式
 (depends-on "web-mode")
+;; Common Lisp
+(depends-on "slime")
+(depends-on "ac-slime")

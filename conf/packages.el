@@ -99,3 +99,13 @@
         (push config popwin:special-display-config)))
 
     (popwin-mode t)))
+
+(use-package slime
+  :init
+  (progn
+    (setq inferior-lisp-program (or (getenv "LISP_PROGRAM") "clisp"))
+    (setq slime-contribs '(slime-fancy))
+    (add-hook 'slime-mode-hook 'set-up-slime-ac)
+    (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+    (eval-after-load "auto-complete"
+      '(add-to-list 'ac-modes 'slime-repl-mode))))
