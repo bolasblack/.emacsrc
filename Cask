@@ -17,7 +17,7 @@
 (depends-on "tabbar-ruler")
 ;; 主题
 (depends-on "color-theme")
-(depends-on "color-theme-solarized")
+(depends-on "zenburn-theme")
 ;; 键绑定增强
 (depends-on "bind-key")
 (depends-on "use-package")

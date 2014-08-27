@@ -9,17 +9,20 @@
 
 (require 'use-package)
 
-(use-package color-theme)
-(use-package color-theme-solarized
+(use-package zenburn-theme
   :init
-  (progn
-    (load-theme 'solarized-dark t)))
+  (load-theme 'zenburn t))
 
-(use-package tabbar-ruler
+(use-package color-theme
   :init
   (progn
-    (setq tabbar-ruler-global-tabbar t)
-    (tabbar-install-faces)))
+    (use-package tabbar-ruler
+      :init
+      (progn
+        (setq tabbar-ruler-global-tabbar t)
+        (tabbar-install-faces)
+        (tabbar-ruler-group-by-projectile-project)))
+    ))
 
 (use-package help-fns+)
 
@@ -57,22 +60,6 @@
   (progn
     (custom-set-variables
      '(git-gutter:unchanged-sign " "))
-
-    (which-flet ((find-color (name)
-                             (let ((index (if window-system
-                                              (if solarized-degrade 3
-                                                (if solarized-broken-srgb 2 1))
-                                            (case (display-color-cells)
-                                              (16 4)
-                                              (8  5)
-                                              (otherwise 3)))))
-                               (nth index (assoc name solarized-colors)))))
-      (set-face-foreground 'git-gutter:unchanged (find-color 'base02))
-      (set-face-background 'git-gutter:unchanged (find-color 'base02))
-      (set-face-background 'git-gutter:modified (find-color 'base02))
-      (set-face-background 'git-gutter:added (find-color 'base02))
-      (set-face-background 'git-gutter:deleted (find-color 'base02)))
-
     (global-git-gutter-mode t)
     (git-gutter:linum-setup)
 ))
