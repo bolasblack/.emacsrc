@@ -5,6 +5,8 @@
 
 ;; 文件识别
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
 
 ;; 把 /user/loacl/bin 放入执行目录
 (push "/usr/local/bin" exec-path)
