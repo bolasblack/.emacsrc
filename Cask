@@ -61,6 +61,10 @@
 (depends-on "markdown-mode")
 ;; CoffeeScirpt
 (depends-on "coffee-mode")
+;; Jade
+(depends-on "jade-mode")
+;; Sass
+(depends-on "sass-mode")
 ;; 编辑 html 模板时执行多种高亮的主模式
 (depends-on "web-mode")
 ;; Common Lisp
