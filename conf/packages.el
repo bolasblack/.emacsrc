@@ -41,7 +41,8 @@
 (use-package yasnippet
   :init
   (progn
-    (yas-global-mode)))
+    (yas-global-mode)
+    (setq yas-snippet-dirs (append yas-snippet-dirs 'dir-snippet))))
 
 (use-package auto-complete
   :init

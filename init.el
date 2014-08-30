@@ -2,6 +2,8 @@
 (defconst dir-rc (expand-file-name "~/.emacsrc/"))
 ;; Emacs 配置文件地址
 (defconst dir-conf (concat dir-rc "conf/"))
+;; Snippet 文件地址
+(defconst dir-snippet (concat dir-rc "snippets/"))
 
 (add-to-list 'load-path dir-rc)
 (add-to-list 'load-path dir-conf)

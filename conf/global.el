@@ -8,6 +8,15 @@
 (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
 
+;; 让自动保存的文件不随地乱扔
+;; From: http://www.emacswiki.org/emacs/BackupDirectory
+(setq backup-by-copying t ; don't clobber symlinks
+      backup-directory-alist '(("." . "~/.emacs.d/.saves")) ; don't litter my fs tree
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t) ; use versioned backups
+
 ;; 把 /user/loacl/bin 放入执行目录
 (push "/usr/local/bin" exec-path)
 
