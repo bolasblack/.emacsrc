@@ -28,6 +28,8 @@
 (depends-on "popwin")
 ;; 另外一种补全方式
 (depends-on "helm")
+;; 缩进辅助线
+(depends-on "indent-guide")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 

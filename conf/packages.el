@@ -110,3 +110,7 @@
     (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
     (eval-after-load "auto-complete"
       '(add-to-list 'ac-modes 'slime-repl-mode))))
+
+(use-package indent-guide
+  :init
+  (indent-guide-global-mode))
