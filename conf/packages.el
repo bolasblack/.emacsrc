@@ -69,7 +69,8 @@
   :init
   (progn
     (helm-mode t)
-    (bind-key "C-w" 'kill-region-or-backward-kill-word helm-map)
+    (bind-key "C-w" 'kill-region-or-backward-kill-word-or-delim helm-map)
+    (bind-key "C-w" 'kill-region-or-backward-kill-word-or-delim helm-generic-files-map)
     (bind-key "C-M-y" 'helm-show-kill-ring)))
 
 (use-package projectile
