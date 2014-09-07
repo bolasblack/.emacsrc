@@ -1,9 +1,12 @@
 (source gnu)
 (source melpa)
 
+;; https://github.com/magnars/dash.el
 (depends-on "dash")
-(depends-on "f")
+;; https://github.com/magnars/s.el
 (depends-on "s")
+;; https://github.com/rejeep/f.el
+(depends-on "f")
 
 (depends-on "cask")
 (depends-on "drag-stuff")
