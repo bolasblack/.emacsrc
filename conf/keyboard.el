@@ -3,8 +3,8 @@
 ;; 按键设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 从光标处换行并且根据主模式缩进
-(bind-key "M-RET" 'newline-and-indent)
+;; 合并当前行和下一行，类似于 Vim 的 J 键
+(bind-key "M-j" 'concat-lines)
 
 ;; 删除到行首
 (bind-key "M-k" 'backward-kill-line)

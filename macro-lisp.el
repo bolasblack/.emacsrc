@@ -205,4 +205,15 @@ With arg N, insert N newlines."
   (kill-region (point) (mark))
   (pop-mark))
 
+
+(defun concat-lines (&optional n)
+  "Concat next line with current line, just like J in Vim"
+  (interactive "*p")
+  (dotimes (time n)
+    (next-line)
+    (back-to-indentation)
+    (backward-kill-line (point))
+    (delete-backward-char 1)
+    (insert " ")))
+
 (provide 'macro-lisp)
