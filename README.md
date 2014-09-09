@@ -8,4 +8,5 @@
 
 * `conf/` 是主要的配置文件所在地
 * `snippets/` snippet 文件所在地
+* `flycheck.conf/` flycheck 的配置文件所在地
 * `macro-lisp.el` 里的是一些零碎的代码

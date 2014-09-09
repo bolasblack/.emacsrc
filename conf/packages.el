@@ -1,4 +1,3 @@
-
 (let ((cask-command (format "cask --path '%s' load-path" dir-rc)))
   (let ((cask-paths (split-string (shell-command-to-string cask-command) ":")))
     (dolist (path cask-paths)
@@ -36,7 +35,10 @@
   (global-flycheck-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup)
   (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                    (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc)))))
+                                    (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+  (add-hook 'coffee-mode-hook (lambda ()
+                                (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json"))))
+)
 
 (use-package yasnippet
   :init
