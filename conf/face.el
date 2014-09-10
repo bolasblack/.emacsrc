@@ -64,3 +64,5 @@
 
 (delete-selection-mode -1)
 (setq-default indent-tabs-mode nil)
+
+(provide 'face)

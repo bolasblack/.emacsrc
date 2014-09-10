@@ -87,3 +87,5 @@
 (setq-default default-process-coding-system '(utf-8 . utf-8))
 ;; 设置进程的 I/O 操作的编码
 (modify-coding-system-alist 'process "*" 'utf-8)
+
+(provide 'global)

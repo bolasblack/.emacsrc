@@ -41,3 +41,5 @@
 ;; Undo 和 Redo
 (bind-key "C-/" 'undo)
 (bind-key "M-/" 'undo-tree-redo)
+
+(provide 'keyboard)

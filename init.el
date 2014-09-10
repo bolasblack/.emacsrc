@@ -12,22 +12,25 @@
   (dolist (files-list files-lists)
     (let ((root-path (symbol-value (car files-list)))
           (names-list (cdr files-list)))
+      (add-to-list 'load-path root-path)
       (dolist (name names-list)
-        (load (concat root-path name))))))
+        (load (concat (symbol-name name) ".el"))))))
 
 (load-files
  ;; 一些小函数
- '(dir-rc "macro-lisp.el")
+ '(dir-rc macro-lisp)
  '(dir-conf
    ;; 全局设定
-   "global.el"
+   global
    ;; 一些插件的设置
-   "packages.el"
+   plugin
    ;; 快捷键设置
-   "keyboard.el"
+   keyboard
    ;; 文件识别
-   "mode-mapping.el"
+   mode-mapping
    ;; 外观设置
-   "face.el"
+   face
    )
  )
+
+(provide 'init)
