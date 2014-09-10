@@ -117,6 +117,14 @@
   :init
   (indent-guide-global-mode))
 
+(use-package multiple-cursors
+  :bind
+  ("C-c C-n" . mc/mark-next-lines)
+  ("C-c C-p" . mc/mark-previous-lines)
+  ("C-c n" . mc/mark-next-like-this)
+  ("C-c p" . mc/mark-previous-like-this)
+  ("C-c h" . mc/mark-all-like-this))
+
 (use-package undo-tree
   :init
   (global-undo-tree-mode t))

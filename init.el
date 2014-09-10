@@ -25,6 +25,8 @@
    "packages.el"
    ;; 快捷键设置
    "keyboard.el"
+   ;; 文件识别
+   "mode-mapping.el"
    ;; 外观设置
    "face.el"
    )

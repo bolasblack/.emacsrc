@@ -3,11 +3,6 @@
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; 文件识别
-(add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
-
 ;; Put autosave files (ie #foo#) and backup files (ie foo~) in ~/.emacs.d/.
 ;; From http://snarfed.org/gnu_emacs_backup_files
 (custom-set-variables
