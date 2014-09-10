@@ -8,14 +8,20 @@
 (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
 
-;; 让自动保存的文件不随地乱扔
+;; Put autosave files (ie #foo#) and backup files (ie foo~) in ~/.emacs.d/.
+;; From http://snarfed.org/gnu_emacs_backup_files
+(custom-set-variables
+  '(auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
+  '(backup-directory-alist '((".*" . "~/.emacs.d/backups/"))))
+(make-directory "~/.emacs.d/autosaves/" t)
+(make-directory "~/.emacs.d/backups/" t)
+
 ;; From: http://www.emacswiki.org/emacs/BackupDirectory
-(setq backup-by-copying t ; don't clobber symlinks
-      backup-directory-alist '(("." . "~/.emacs.d/.saves")) ; don't litter my fs tree
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t) ; use versioned backups
+(setq version-control t) ; use versioned backups
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq backup-by-copying t) ; don't clobber symlinks
 
 ;; 把 /user/loacl/bin 放入执行目录
 (push "/usr/local/bin" exec-path)
