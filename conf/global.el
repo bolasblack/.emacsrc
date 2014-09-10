@@ -18,6 +18,9 @@
 (setq kept-old-versions 2)
 (setq backup-by-copying t) ; don't clobber symlinks
 
+;; M-f/b 的时候 驼峰、连字符、下划线 都会被视为单词的分隔边界
+(global-subword-mode t)
+
 ;; 把 /user/loacl/bin 放入执行目录
 (push "/usr/local/bin" exec-path)
 
