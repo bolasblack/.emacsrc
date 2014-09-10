@@ -111,7 +111,7 @@ See also `do-if'
   (newline)
   (indent-for-tab-command))
 
-(defun open-prev-line ()
+(defun open-previous-line ()
   "Insert a newline"
   (interactive)
   (beginning-of-line)

@@ -36,9 +36,6 @@
 (setq c-basic-offset 4)
 (setq-default tab-width 2)
 
-;; 使用系统剪切版
-(setq x-select-enable-clipboard t)
-
 ;; 用户信息
 (setq user-full-name "c4605")
 (setq user-mail-address "bolasblack [at] gmail")

@@ -28,7 +28,7 @@
 
 ;; C-o 和 M-o 分别在下方和上方新建一行
 (bind-key "C-o" 'open-next-line)
-(bind-key "M-o" 'open-prev-line)
+(bind-key "M-o" 'open-previous-line)
 
 ;; Super-c/v/x 对应系统的复制粘贴剪切
 (bind-key "S-c" 'osx-clipboard-kill-ring-save)

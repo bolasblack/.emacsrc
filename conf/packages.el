@@ -64,8 +64,7 @@
     (custom-set-variables
      '(git-gutter:unchanged-sign " "))
     (global-git-gutter-mode t)
-    (git-gutter:linum-setup)
-))
+    (git-gutter:linum-setup)))
 
 (use-package helm
   :init
