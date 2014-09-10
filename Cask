@@ -49,6 +49,8 @@
 (depends-on "smartparens")
 ;; 便捷选区
 (depends-on "expand-region")
+;; Undo-tree
+(depends-on "undo-tree")
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 

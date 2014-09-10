@@ -37,3 +37,7 @@
 
 ;; C-c a 然后按你要找到的字母 x ，按几次就会向后找几次
 (bind-key "C-c a" 'go-to-char)
+
+;; Undo 和 Redo
+(bind-key "C-/" 'undo)
+(bind-key "M-/" 'undo-tree-redo)

@@ -117,3 +117,7 @@
 (use-package indent-guide
   :init
   (indent-guide-global-mode))
+
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode t))
