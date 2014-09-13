@@ -62,6 +62,16 @@
 ;; 在标题栏显示buffer的名字，而不是 emacs@email.***这样没用的提示。
 (setq frame-title-format "Emacs@%b")
 
+;; 一些 24.4 的东西
+(unless (version< emacs-version "24.4")
+  (progn
+    (add-hook 'lisp-mode-hook
+              (lambda ()
+                ;; 把 lambda 显示成 λ
+                (push '("lambda" . ?λ) prettify-symbols-alist)))
+    (global-prettify-symbols-mode t)
+))
+
 (delete-selection-mode -1)
 (setq-default indent-tabs-mode nil)
 
