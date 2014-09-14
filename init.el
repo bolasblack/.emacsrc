@@ -16,6 +16,11 @@
       (dolist (name names-list)
         (load (concat (symbol-name name) ".el"))))))
 
+;; Emacs server
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
 (load-files
  ;; 一些小函数
  '(dir-rc macro-lisp)
