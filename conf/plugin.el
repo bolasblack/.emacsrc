@@ -46,12 +46,6 @@
     (yas-global-mode)
     (setq yas-snippet-dirs (append yas-snippet-dirs 'dir-snippet))))
 
-(use-package auto-complete
-  :init
-  (progn
-    (use-package auto-complete-config)
-    (ac-config-default)))
-
 (use-package smartparens
   :init
   (progn
@@ -107,11 +101,7 @@
   :init
   (progn
     (setq inferior-lisp-program (or (getenv "LISP_PROGRAM") "clisp"))
-    (setq slime-contribs '(slime-fancy))
-    (add-hook 'slime-mode-hook 'set-up-slime-ac)
-    (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
-    (eval-after-load "auto-complete"
-      '(add-to-list 'ac-modes 'slime-repl-mode))))
+    (slime-setup '(slime-fancy slime-company))))
 
 (use-package indent-guide
   :init
@@ -128,3 +118,12 @@
 (use-package undo-tree
   :init
   (global-undo-tree-mode t))
+
+(use-package robe
+  :init
+  (add-hook 'ruby-mode-hook 'robe-mode))
+
+(use-package company
+  :init
+  (global-company-mode t)
+  (push 'company-robe company-backends))

@@ -39,7 +39,7 @@
 ;; snippet 引擎
 (depends-on "yasnippet")
 ;; 补全
-(depends-on "auto-complete")
+(depends-on "company")
 ;; 语法检查
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
@@ -74,6 +74,12 @@
 (depends-on "sass-mode")
 ;; 编辑 html 模板时执行多种高亮的主模式
 (depends-on "web-mode")
-;; Common Lisp
+
+;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
+
+;; Common Lisp 开发环境
 (depends-on "slime")
-(depends-on "ac-slime")
+(depends-on "slime-company")
+;; Ruby 开发环境
+(depends-on "robe")
+(depends-on "inf-ruby")
