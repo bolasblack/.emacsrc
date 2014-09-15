@@ -74,6 +74,8 @@
 (depends-on "sass-mode")
 ;; 编辑 html 模板时执行多种高亮的主模式
 (depends-on "web-mode")
+;; Lua
+(depends-on "lua-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
