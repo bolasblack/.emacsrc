@@ -76,6 +76,8 @@
 (depends-on "web-mode")
 ;; Lua
 (depends-on "lua-mode")
+;; Less css
+(depends-on "less-css-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
