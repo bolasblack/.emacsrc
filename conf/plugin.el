@@ -126,4 +126,7 @@
 (use-package company
   :init
   (global-company-mode t)
-  (push 'company-robe company-backends))
+  ;; 自动提示的最少字数
+  (setq company-minimum-prefix-length 1)
+  (push 'company-robe  company-backends)
+  (push 'company-files company-backends))
