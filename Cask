@@ -78,6 +78,8 @@
 (depends-on "lua-mode")
 ;; Less css
 (depends-on "less-css-mode")
+;; gitignore
+(depends-on "gitignore-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
