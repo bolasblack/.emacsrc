@@ -2,28 +2,25 @@
 (defconst dir-rc (expand-file-name "~/.emacsrc/"))
 ;; Emacs 配置文件地址
 (defconst dir-conf (concat dir-rc "conf/"))
+;; 自己写的 Lisp 脚本文件位置
+(defconst dir-lisp (concat dir-rc "lisps/"))
 ;; Snippet 文件地址
 (defconst dir-snippet (concat dir-rc "snippets/"))
 
-(add-to-list 'load-path dir-rc)
-(add-to-list 'load-path dir-conf)
+(let ((cask-command (format "cask --path '%s' load-path" dir-rc)))
+  (let ((cask-paths (split-string (shell-command-to-string cask-command) ":")))
+    (dolist (path cask-paths)
+      (add-to-list 'load-path path))))
 
-(defun load-files (&rest files-lists)
-  (dolist (files-list files-lists)
-    (let ((root-path (symbol-value (car files-list)))
-          (names-list (cdr files-list)))
-      (add-to-list 'load-path root-path)
-      (dolist (name names-list)
-        (load (concat (symbol-name name) ".el"))))))
+(require 'cask)
+(cask-initialize dir-rc)
+(require 'use-package)
 
-;; Emacs server
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(dolist (folder `(,dir-lisp))
+  (if (f-exists? folder)
+      (-map 'load (f-files folder))))
 
 (load-files
- ;; 一些小函数
- '(dir-rc macro-lisp)
  '(dir-conf
    ;; 全局设定
    global
@@ -37,5 +34,10 @@
    face
    )
  )
+
+;; Emacs server
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (provide 'init)
