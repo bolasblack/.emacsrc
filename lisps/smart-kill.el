@@ -6,9 +6,17 @@
   (interactive "*p\nP")
   (push-mark (point))
   (if (= 0 (skip-syntax-backward "w"))
-      (if (= 0 (skip-chars-backward "\n"))
-          (backward-delete-char-untabify arg killp)
-        (insert-char ?\n)))
+      (block nil
+        ;; 选中多个连续的空行
+        (let ((backword-break-line-count (skip-chars-backward "\n")))
+          (unless (= 0 backword-break-line-count)
+            ;; 如果选中的空行不只一个的话，那么就需要"留下"最后一个空行
+            (unless (= -1 backword-break-line-count) (insert-char ?\n))
+            (return)))
+        ;; 选中多个连续的空白，比如空格，制表符
+        (unless (= 0 (skip-syntax-backward "-"))
+          (return))
+        (backward-delete-char-untabify arg killp)))
   (kill-region (point) (mark))
   (pop-mark))
 
