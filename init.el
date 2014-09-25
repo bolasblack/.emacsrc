@@ -28,8 +28,8 @@
    plugin
    ;; 快捷键设置
    keyboard
-   ;; 文件识别
-   mode-mapping
+   ;; Mode 相关的一些设置，比如文件识别
+   mode-setting
    ;; 外观设置
    face
    )

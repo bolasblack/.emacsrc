@@ -32,7 +32,7 @@
 
 ;; 设置缩进
 (setq c-basic-offset 4)
-(setq-default tab-width 2)
+(setq-default tab-width 4)
 
 ;; 用户信息
 (setq user-full-name "c4605")

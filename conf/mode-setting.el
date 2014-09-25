@@ -1,6 +1,6 @@
 ;; -*- Emacs-Lisp -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 文件识别
+;; Mode 相关
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Emacs Lisp
@@ -39,3 +39,6 @@
               nil nil "bplist"])
 ;;It is necessary to perform an update!
 (jka-compr-update)
+
+;; JavaScript
+(setq js-indent-level 2)
