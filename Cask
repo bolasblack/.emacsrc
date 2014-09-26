@@ -80,6 +80,8 @@
 (depends-on "less-css-mode")
 ;; gitignore
 (depends-on "gitignore-mode")
+;; Yaml
+(depends-on "yaml-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
