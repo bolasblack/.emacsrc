@@ -44,3 +44,6 @@
 
 ;; JavaScript
 (setq js-indent-level 2)
+
+;; Lua
+(setq lua-indent-level 2)
