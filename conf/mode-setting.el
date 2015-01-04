@@ -25,6 +25,12 @@
 (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
+;; Shell Script
+(add-to-list 'auto-mode-alist '("\\.zsh$" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("zshrc$" . shell-script-mode))
+(setq sh-indentation 2)
+(setq sh-basic-offset 2)
+
 ;; OS X Plist
 
 ;; Emacs provides jka-compr which decompresses a file to stdout for reading,
