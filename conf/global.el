@@ -31,8 +31,9 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; 设置缩进
-(setq c-basic-offset 4)
-(setq-default tab-width 4)
+(setq-default c-basic-offset 2
+              tab-width 2
+              indent-tabs-mode nil)
 
 ;; 用户信息
 (setq user-full-name "c4605")
