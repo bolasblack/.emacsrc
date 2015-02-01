@@ -33,6 +33,8 @@
 (depends-on "helm")
 ;; 缩进辅助线
 (depends-on "indent-guide")
+;; 拼音首字母搜索中文
+(depends-on "pinyin-search")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 

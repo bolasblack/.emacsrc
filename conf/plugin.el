@@ -16,6 +16,8 @@
 
 (use-package help-fns+)
 
+(use-package pinyin-search)
+
 (use-package window-numbering
   :init
   (window-numbering-mode))
