@@ -58,3 +58,6 @@
 ;; css&Less
 (setq css-indent-level 2)
 (setq css-indent-offset 2)
+
+;; XML
+(add-to-list 'auto-mode-alist '("\\.aiml$" . nxml-mode))
