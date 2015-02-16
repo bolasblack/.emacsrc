@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: APP_LOG(...)
+# key: APPLOG
+# binding: direct-keybinding
+# --
+APP_LOG(${1:APP_LOG_LEVEL_INFO}, "$2"${3:, $4});$0

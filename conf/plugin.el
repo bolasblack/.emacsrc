@@ -1,18 +1,17 @@
-
 (use-package zenburn-theme
   :init
   (load-theme 'zenburn t))
 
-(use-package color-theme
-  :init
-  (progn
-    (use-package tabbar-ruler
-      :init
-      (progn
-        (setq tabbar-ruler-global-tabbar t)
-        (tabbar-install-faces)
-        (tabbar-ruler-group-by-projectile-project)))
-    ))
+;;(use-package color-theme
+;;  :init
+;;  (progn
+;;    (use-package tabbar-ruler
+;;      :init
+;;      (progn
+;;        (setq tabbar-ruler-global-tabbar t)
+;;        (tabbar-install-faces)
+;;        (tabbar-ruler-group-by-projectile-project)))
+;;    ))
 
 (use-package help-fns+)
 
@@ -36,8 +35,8 @@
 (use-package yasnippet
   :init
   (progn
-    (yas-global-mode)
-    (setq yas-snippet-dirs (append yas-snippet-dirs 'dir-snippet))))
+    (add-to-list 'yas-snippet-dirs dir-snippet)
+    (yas-global-mode 1)))
 
 (use-package smartparens
   :init
@@ -122,4 +121,13 @@
   ;; 自动提示的最少字数
   (setq company-minimum-prefix-length 1)
   (push 'company-robe  company-backends)
-  (push 'company-files company-backends))
+  (push 'company-files company-backends)
+  (use-package company-ycmd
+    :init
+    (company-ycmd-setup))
+  )
+
+(use-package ycmd
+  :init
+  (set-variable 'ycmd-server-command '("python" (getenv "YCMD_PATH")))
+  (ycmd-setup))

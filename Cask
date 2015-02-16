@@ -40,8 +40,6 @@
 
 ;; snippet 引擎
 (depends-on "yasnippet")
-;; 补全
-(depends-on "company")
 ;; 语法检查
 (depends-on "flycheck")
 (depends-on "flycheck-cask")
@@ -53,6 +51,11 @@
 (depends-on "expand-region")
 ;; Undo-tree
 (depends-on "undo-tree")
+;; 补全
+(depends-on "company")
+;; YouCompleteMe
+(depends-on "ycmd")
+(depends-on "company-ycmd")
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
