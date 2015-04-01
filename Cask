@@ -35,6 +35,9 @@
 (depends-on "indent-guide")
 ;; 拼音首字母搜索中文
 (depends-on "pinyin-search")
+;; JavaScript CSS HTML 格式化
+;;   npm install js-beautify -g
+(depends-on "web-beautify")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
