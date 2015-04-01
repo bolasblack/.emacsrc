@@ -56,6 +56,7 @@
 (setq lua-indent-level 2)
 
 ;; css&Less
+(add-to-list 'auto-mode-alist '("\\.styl$" . sass-mode))
 (setq css-indent-level 2)
 (setq css-indent-offset 2)
 
