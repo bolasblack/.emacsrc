@@ -14,7 +14,8 @@
 
 (require 'cask)
 (cask-initialize dir-rc)
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 (dolist (folder `(,dir-lisp))
   (if (f-exists? folder)
