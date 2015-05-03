@@ -51,9 +51,11 @@
 (use-package helm
   :config
   (helm-mode t)
-  (bind-key "C-w" 'kill-region-or-backward-delete-word-or-delim helm-map)
-  (bind-key "C-w" 'kill-region-or-backward-delete-word-or-delim helm-generic-files-map)
-  (bind-key "C-M-y" 'helm-show-kill-ring))
+  :bind
+  ("C-M-y" . helm-show-kill-ring)
+  :bind-map
+  ((:map helm-map ("C-w" . kill-region-or-backward-delete-word-or-delim))
+   (:map helm-generic-files-map ("C-w" . kill-region-or-backward-delete-word-or-delim))))
 
 (use-package projectile
   :config
