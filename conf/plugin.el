@@ -1,3 +1,4 @@
+
 (use-package zenburn-theme
   :config
   (load-theme 'zenburn t))
@@ -14,8 +15,6 @@
 
 (use-package help-fns+)
 
-(use-package pinyin-search)
-
 (use-package window-numbering
   :config
   (window-numbering-mode))
@@ -25,11 +24,10 @@
   (use-package flycheck-cask)
   (global-flycheck-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup)
-  (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                    (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
-  (add-hook 'coffee-mode-hook (lambda ()
-                                (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json"))))
-)
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda () (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+  (add-hook 'coffee-mode-hook
+            (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
 
 (use-package yasnippet
   :config
@@ -68,7 +66,7 @@
   :config
   (popwin-mode t)
 
-  ; Config: https://github.com/m2ym/popwin-el#special-display-config
+  ;; Config: https://github.com/m2ym/popwin-el#special-display-config
   (setq popwin:popup-window-height 15)
 
   (let ((c '(
@@ -95,13 +93,12 @@
   (indent-guide-global-mode))
 
 (use-package multiple-cursors
-  :bind (
-         ("C-c C-n" . mc/mark-next-lines)
-         ("C-c C-p" . mc/mark-previous-lines)
-         ("C-c n" . mc/mark-next-like-this)
-         ("C-c p" . mc/mark-previous-like-this)
-         ("C-c h" . mc/mark-all-like-this)
-  ))
+  :bind
+  (("C-c C-n" . mc/mark-next-lines)
+   ("C-c C-p" . mc/mark-previous-lines)
+   ("C-c n" . mc/mark-next-like-this)
+   ("C-c p" . mc/mark-previous-like-this)
+   ("C-c h" . mc/mark-all-like-this)))
 
 (use-package undo-tree
   :config
@@ -127,3 +124,25 @@
   (setq ycmd-server-command (list "python" (getenv "YCMD_PATH")))
   :config
   (ycmd-setup))
+
+(use-package nginx-mode)
+
+(use-package web-mode
+  :mode "\\.js[x]?\\'"
+  :config
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-sql-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-attr-indent-offset 2)
+  (setq web-mode-markup-indent-offset 2))
+
+(use-package paredit
+  :config
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook                  #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook                        #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook                        #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook            #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook                      #'enable-paredit-mode))

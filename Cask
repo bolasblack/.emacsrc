@@ -33,8 +33,6 @@
 (depends-on "helm")
 ;; 缩进辅助线
 (depends-on "indent-guide")
-;; 拼音首字母搜索中文
-(depends-on "pinyin-search")
 ;; JavaScript CSS HTML 格式化
 ;;   npm install js-beautify -g
 (depends-on "web-beautify")
@@ -59,6 +57,8 @@
 ;; YouCompleteMe
 (depends-on "ycmd")
 (depends-on "company-ycmd")
+;; 方便的 Lisp 编辑
+(depends-on "paredit")
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
@@ -90,6 +90,10 @@
 (depends-on "gitignore-mode")
 ;; Yaml
 (depends-on "yaml-mode")
+;; Nginx
+(depends-on "nginx-mode")
+;; JSX
+(depends-on "jsx-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
