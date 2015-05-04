@@ -1,8 +1,4 @@
 
-(unless (member :bind-map use-package-keywords)
-  (setq use-package-keywords
-        (append use-package-keywords '(:bind-map))))
-
 (defun use-package--dotted-list-p (x)
   (not (listp (cdr x))))
 
@@ -47,3 +43,15 @@
                  ,@(mapcar #'(lambda (bind-key-seq)
                                `(,(if override 'bind-keys* 'bind-keys) ,@bind-key-seq))
                            arg)))))))
+
+(defun use-package-normalize/:bind-map* (name-symbol keyword args)
+  (use-package-normalize/:bind-map name-symbol keyword args))
+
+(defun use-package-handler/:bind-map* (name-symbol keyword args rest state)
+  (use-package-handler/:bind-map name-symbol keyword args rest state t))
+
+(mapcar #'(lambda (keyword)
+            (unless (member keyword use-package-keywords)
+              (setq use-package-keywords
+                    (append use-package-keywords (list keyword)))))
+        '(:bind-map :bind-map*))
