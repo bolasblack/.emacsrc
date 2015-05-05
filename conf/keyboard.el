@@ -17,7 +17,7 @@
 (do-if-region 'eval-region 'eval-last-sexp)
 (bind-key "C-c C-e" 'eval-region-or-eval-last-sexp)
 
-;; 设置 C-x C-g 为goto-line
+;; 设置 C-x C-g 为 goto-line
 (bind-key "C-x C-g" 'goto-line)
 
 ;; C-% 跳转到对应标点
@@ -31,9 +31,6 @@
 (bind-key "S-c" 'osx-clipboard-kill-ring-save)
 (bind-key "S-v" 'osx-clipboard-yank)
 (bind-key "S-x" 'osx-clipboard-cut)
-
-;; C-c a 然后按你要找到的字母 x ，按几次就会向后找几次
-(bind-key "C-c a" 'go-to-char)
 
 ;; Undo 和 Redo
 (bind-key "C-/" 'undo)

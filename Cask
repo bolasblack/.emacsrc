@@ -36,6 +36,8 @@
 ;; JavaScript CSS HTML 格式化
 ;;   npm install js-beautify -g
 (depends-on "web-beautify")
+;; 快速跳转到界面上某个地方
+(depends-on "ace-jump-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
