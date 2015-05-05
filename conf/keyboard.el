@@ -17,9 +17,6 @@
 (do-if-region 'eval-region 'eval-last-sexp)
 (bind-key "C-c C-e" 'eval-region-or-eval-last-sexp)
 
-;; 将 M+x 绑定为 C+x C+m 与 C+c C+m
-(bind-key "C-x C-m" 'execute-extended-command)
-
 ;; 设置 C-x C-g 为goto-line
 (bind-key "C-x C-g" 'goto-line)
 

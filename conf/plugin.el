@@ -48,9 +48,17 @@
 
 (use-package helm
   :config
+  (require 'helm-config)
   (helm-mode t)
+  (helm-autoresize-mode t)
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match    t)
   :bind
-  ("C-M-y" . helm-show-kill-ring)
+  (("C-M-y" . helm-show-kill-ring)
+   ("M-x" . helm-M-x)
+   ("C-x C-m" . helm-M-x)
+   ("C-x b" . helm-mini)
+   ("C-x C-f" . helm-find-files))
   :bind-map
   ((:map helm-map ("C-w" . kill-region-or-backward-delete-word-or-delim))
    (:map helm-generic-files-map ("C-w" . kill-region-or-backward-delete-word-or-delim))))
