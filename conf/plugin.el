@@ -96,10 +96,6 @@
   :config
   (slime-setup '(slime-fancy slime-company)))
 
-(use-package indent-guide
-  :config
-  (indent-guide-global-mode))
-
 (use-package multiple-cursors
   :bind
   (("C-c C-n" . mc/mark-next-lines)
@@ -158,3 +154,19 @@
 (use-package ace-jump-word
   :bind
   ("C-c C-c" . ace-jump-word-mode))
+
+(use-package linum
+ ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
+ ;; https://github.com/kaushalmodi/.emacs.d/issues/4
+ ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
+ :defer 1
+ :config
+ ;; 调整行号栏的格式
+ (setq linum-format "%3d ")
+ ;; 显示行号
+ (global-linum-mode t))
+
+(use-package indent-guide
+  :defer 1
+  :config
+  (indent-guide-global-mode))

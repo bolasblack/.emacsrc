@@ -20,10 +20,9 @@
 
       ;; 没有滚动条 24.1
       (scroll-bar-mode -1)
-      ))
 
-;; 调整行号栏的格式
-(setq linum-format "%3d ")
+      ;; 让 Emacs 可以直接打开和显示图片。
+      (auto-image-file-mode t)))
 
 ;; 关闭启动时的 “开机画面”
 (setq inhibit-startup-message t)
@@ -35,14 +34,8 @@
 (show-paren-mode t)
 (setq show-paren-style 'parentheses)
 
-;; 让 Emacs 可以直接打开和显示图片。
-(auto-image-file-mode t)
-
 ;; 显示列号
 (column-number-mode t)
-
-;; 显示行号
-(global-linum-mode t)
 
 ;;语法加亮
 (global-font-lock-mode t)
