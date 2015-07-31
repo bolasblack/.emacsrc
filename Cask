@@ -38,6 +38,10 @@
 ;; 快速跳转到界面上某个地方
 (depends-on "ace-jump-mode")
 
+;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
+(depends-on "evil")
+(depends-on "evil-leader")
+
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
 ;; snippet 引擎

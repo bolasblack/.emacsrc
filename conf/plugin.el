@@ -63,13 +63,6 @@
   ((:map helm-map ("C-w" . kill-region-or-backward-delete-word-or-delim))
    (:map helm-generic-files-map ("C-w" . kill-region-or-backward-delete-word-or-delim))))
 
-(use-package projectile
-  :config
-  (projectile-global-mode t)
-  (setq projectile-completion-system 'helm)
-  (use-package helm-projectile
-    :bind ("M-p" . helm-projectile)))
-
 (use-package popwin
   :config
   (popwin-mode t)
@@ -170,3 +163,29 @@
   :defer 1
   :config
   (indent-guide-global-mode))
+
+(use-package evil
+  :bind-map
+  ((:map evil-normal-state-map ("C-u" . scroll-down-command)))
+  :config
+  (evil-mode)
+  (use-package evil-leader
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader ","))
+  (use-package evil-easymotion
+    :load-path "vendors"
+    :config
+    (defmacro evilem-define (key motion &optional pre-hook post-hook vars)
+      "Automatically create and bind an evil motion"
+      (message "evil-leader/set-key %s" key)
+      `(evil-leader/set-key ,key (evilem-create ,motion ,pre-hook ,post-hook ,vars)))
+    (evilem-default-keybindings ",,"))
+  (use-package projectile
+    :config
+    (projectile-global-mode t)
+    (setq projectile-completion-system 'helm)
+    (use-package helm-projectile
+      :bind-map
+      ((:map evil-normal-state-map ("C-p" . helm-projectile)))))
+)

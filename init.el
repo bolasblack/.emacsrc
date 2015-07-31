@@ -5,6 +5,8 @@
 (defconst dir-conf (concat dir-rc "conf/"))
 ;; 自己写的 Lisp 脚本文件位置
 (defconst dir-lisp (concat dir-rc "lisps/"))
+;; 一些不是自己写的 Lisp 脚本
+(defconst vendor-lisp (concat dir-rc "vendors/"))
 ;; Snippet 文件地址
 (defconst dir-snippet (concat dir-rc "snippets/"))
 
@@ -15,7 +17,7 @@
   (require 'use-package))
 
 (require 'f)
-(dolist (folder `(,dir-lisp))
+(dolist (folder `(,dir-lisp ,vendor-lisp))
   (if (f-exists? folder)
       (-map 'load (f-files folder))))
 
