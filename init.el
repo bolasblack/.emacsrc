@@ -1,3 +1,4 @@
+
 ;; .emacs.d 文件地址
 (defconst dir-rc (expand-file-name "~/.emacsrc/"))
 ;; Emacs 配置文件地址
@@ -7,16 +8,13 @@
 ;; Snippet 文件地址
 (defconst dir-snippet (concat dir-rc "snippets/"))
 
-(let ((cask-command (format "cask --path '%s' load-path" dir-rc)))
-  (let ((cask-paths (split-string (shell-command-to-string cask-command) ":")))
-    (dolist (path cask-paths)
-      (add-to-list 'load-path path))))
+(dolist (file '("lisps/cask-compatibility.el" "Cask"))
+  (load (concat dir-rc file)))
 
-(require 'cask)
-(cask-initialize dir-rc)
 (eval-when-compile
   (require 'use-package))
 
+(require 'f)
 (dolist (folder `(,dir-lisp))
   (if (f-exists? folder)
       (-map 'load (f-files folder))))
@@ -40,5 +38,3 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
-
-(provide 'init)

@@ -8,7 +8,6 @@
 ;; https://github.com/rejeep/f.el
 (depends-on "f")
 
-(depends-on "cask")
 (depends-on "drag-stuff")
 (depends-on "exec-path-from-shell")
 
