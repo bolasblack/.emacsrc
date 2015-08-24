@@ -1,6 +1,7 @@
 (source gnu)
 (source melpa)
 
+
 ;; https://github.com/magnars/dash.el
 (depends-on "dash")
 ;; https://github.com/magnars/s.el
@@ -41,6 +42,7 @@
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 (depends-on "evil")
 (depends-on "evil-leader")
+(depends-on "evil-easymotion")
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 

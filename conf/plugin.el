@@ -174,13 +174,8 @@
     (global-evil-leader-mode)
     (evil-leader/set-leader ","))
   (use-package evil-easymotion
-    :load-path "vendors"
     :config
-    (defmacro evilem-define (key motion &optional pre-hook post-hook vars)
-      "Automatically create and bind an evil motion"
-      (message "evil-leader/set-key %s" key)
-      `(evil-leader/set-key ,key (evilem-create ,motion ,pre-hook ,post-hook ,vars)))
-    (evilem-default-keybindings ",,"))
+    (evilem-default-keybindings (kbd ",")))
   (use-package projectile
     :config
     (projectile-global-mode t)
