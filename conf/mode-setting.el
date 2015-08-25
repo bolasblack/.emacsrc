@@ -62,3 +62,6 @@
 
 ;; XML
 (add-to-list 'auto-mode-alist '("\\.aiml$" . nxml-mode))
+
+;; AppleScript
+(add-to-list 'auto-mode-alist '("\\.applescript$" . apples-mode))

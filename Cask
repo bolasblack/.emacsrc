@@ -101,6 +101,8 @@
 (depends-on "nginx-mode")
 ;; JSX
 (depends-on "jsx-mode")
+;; AppleScript
+(depends-on "apples-mode")
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
