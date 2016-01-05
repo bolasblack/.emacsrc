@@ -66,6 +66,8 @@
 (depends-on "company-ycmd")
 ;; 方便的 Lisp 编辑
 (depends-on "paredit")
+;; 注释
+(depends-on "evil-nerd-commenter")
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 

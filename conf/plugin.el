@@ -183,4 +183,14 @@
     (use-package helm-projectile
       :bind-map
       ((:map evil-normal-state-map ("C-p" . helm-projectile)))))
+  (use-package evil-nerd-commenter
+    :bind-map
+    (
+     (:map evil-normal-state-map (",ci" . evilnc-comment-or-uncomment-lines))
+     (:map evil-normal-state-map (",cl" . evilnc-quick-comment-or-uncomment-to-the-line))
+     (:map evil-normal-state-map (",cc" . evilnc-copy-and-comment-lines))
+     (:map evil-normal-state-map (",cp" . evilnc-comment-or-uncomment-paragraphs))
+     (:map evil-normal-state-map (",cr" . comment-or-uncomment-region))
+     (:map evil-normal-state-map (",cv" . evilnc-toggle-invert-comment-line-by-line))
+     ))
 )
