@@ -10,11 +10,8 @@
 ;; Snippet 文件地址
 (defconst dir-snippet (concat dir-rc "snippets/"))
 
-(dolist (file '("lisps/cask-compatibility.el" "Cask"))
+(dolist (file '("lisps/prepare-package.el"))
   (load (concat dir-rc file)))
-
-(eval-when-compile
-  (require 'use-package))
 
 (require 'f)
 (dolist (folder `(,dir-lisp ,vendor-lisp))

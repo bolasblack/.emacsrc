@@ -3,6 +3,9 @@
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Disable lock-files
+(setq create-lockfiles nil)
+
 ;; Put autosave files (ie #foo#) and backup files (ie foo~) in ~/.emacs.d/.
 ;; From http://snarfed.org/gnu_emacs_backup_files
 (custom-set-variables
@@ -21,9 +24,6 @@
 ;; M-f/b 的时候 驼峰、连字符、下划线 都会被视为单词的分隔边界
 (global-subword-mode t)
 
-;; 把 /user/loacl/bin 放入执行目录
-(push "/usr/local/bin" exec-path)
-
 ;; set the default file path
 (setq default-directory "~/")
 
@@ -39,7 +39,7 @@
 (setq user-full-name "c4605")
 (setq user-mail-address "bolasblack [at] gmail")
 
-;;把这些缺省禁用的功能打开。
+;; 把这些缺省禁用的功能打开。
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
