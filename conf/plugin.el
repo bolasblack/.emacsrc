@@ -236,18 +236,45 @@
 (use-package markdown-mode :ensure t)
 (use-package coffee-mode :ensure t)
 (use-package jade-mode :ensure t)
-(use-package sass-mode :ensure t)
-(use-package lua-mode :ensure t)
+(use-package sass-mode
+  :ensure t
+  :mode "\\.styl\\'")
+(use-package lua-mode
+  :ensure t
+  :mode "\\.lua\\'"
+  :interpreter "lua"
+  :config
+  (setq lua-indent-level 2))
 (use-package less-css-mode :ensure t)
 (use-package gitignore-mode :ensure t)
 (use-package yaml-mode :ensure t)
 (use-package nginx-mode :ensure t)
 (use-package jsx-mode :ensure t)
-(use-package apples-mode :ensure t) ;; AppleScript
+(use-package apples-mode ;; AppleScript
+  :ensure t
+  :mode "\\.applescript\\'"
+  :config
+  ;; OS X Plist
+
+  ;; Emacs provides jka-compr which decompresses a file to stdout for reading,
+  ;; and compresses the data from stdin to write the file back out again.
+
+  ;; Allow editing of binary .plist files.
+  (add-to-list 'jka-compr-compression-info-list
+               ["\\.plist$"
+                "converting text XML to binary plist"
+                "plutil"
+                ("-convert" "binary1" "-o" "-" "-")
+                "converting binary plist to text XML"
+                "plutil"
+                ("-convert" "xml1" "-o" "-" "-")
+                nil nil "bplist"])
+  ;;It is necessary to perform an update!
+  (jka-compr-update))
 ;; 编辑 html 模板时执行多种高亮的主模式
 (use-package web-mode
   :ensure t
-  :mode "\\.js[x]?\\'"
+  :mode ("\\.js[x]?\\'" "\\.erb\\'")
   :config
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-sql-indent-offset 2)
