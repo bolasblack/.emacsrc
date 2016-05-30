@@ -50,26 +50,19 @@
       (push config popwin:special-display-config))))
 
 ;; 另外一种补全方式
-(use-package helm
+(use-package ivy
   :ensure t
   :config
-  (require 'helm-config)
-  (helm-mode t)
-  (helm-autoresize-mode t)
-  (setq helm-buffers-fuzzy-matching t
-        helm-recentf-fuzzy-match    t)
-  :bind
-  (("C-M-y" . helm-show-kill-ring)
-   ("M-x" . helm-M-x)
-   ("C-x C-m" . helm-M-x)
-   ("C-x b" . helm-mini)
-   ("C-x C-f" . helm-find-files)
-   :map helm-map
-   ("C-w" . kill-region-or-backward-delete-word-or-delim)
-   :map helm-generic-files-map
-   ("C-w" . kill-region-or-backward-delete-word-or-delim)
-  )
-)
+  (ivy-mode 1)
+  (zenburn-with-color-variables
+    (custom-theme-set-faces
+     'zenburn
+     `(ivy-minibuffer-match-face-1 ((t (:foreground ,zenburn-green :weight bold))))
+     `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-green :weight bold))))
+     `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-green :weight bold))))
+     `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-green :weight bold))))
+     `(ivy-current-match ((t :background ,zenburn-bg+1 :foreground ,zenburn-fg)))
+     )))
 
 ;; 缩进辅助线
 (use-package indent-guide
@@ -88,7 +81,20 @@
   :bind
   ("C-c C-c" . ace-jump-word-mode))
 
+;; 让 Emacs 支持在 Shell 里自定义的 PATH
 (use-package exec-path-from-shell :ensure t)
+
+;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
+;; 使用 C-p C-n 时平滑滚动，而不是直接向上/下一页跳几行
+(use-package smooth-scrolling
+  :ensure t
+  :config
+  (smooth-scrolling-mode))
 
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 (use-package evil
@@ -181,6 +187,12 @@
 
 (use-package drag-stuff :ensure t)
 
+;; 光标移动到一个单词后会高亮所有相同的单词
+(use-package auto-highlight-symbol
+  :ensure t
+  :config
+  (auto-highlight-symbol-mode))
+
 ;; Sublime Text 的多光标模式
 ;; (use-package multiple-cursors
 ;;   :ensure t
@@ -190,9 +202,9 @@
 ;;    ("C-c n" . mc/mark-next-like-this)
 ;;    ("C-c p" . mc/mark-previous-like-this)
 ;;    ("C-c h" . mc/mark-all-like-this)))
+
 ;; 便捷选区
-;; (use-package expand-region
-;;   :ensure t)
+(use-package expand-region :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
@@ -201,14 +213,10 @@
   :ensure t
   :config
   (projectile-global-mode t)
-  (setq projectile-completion-system 'helm))
-
-(use-package helm-projectile
-  :ensure t
-  :config
-  (eval-after-load 'evil
-    '(progn
-       (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile))))
+  (setq projectile-completion-system 'ivy)
+  :bind
+  (:map evil-normal-state-map
+   ("C-p" . projectile-find-file)))
 
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter

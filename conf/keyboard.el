@@ -25,3 +25,6 @@
 ;; Undo 和 Redo
 (bind-key "C-/" 'undo)
 (bind-key "M-/" 'undo-tree-redo)
+
+;; C-x C-m 替代 M-x
+(bind-key "C-x C-m" 'execute-extended-command)
