@@ -206,6 +206,14 @@
 ;; 便捷选区
 (use-package expand-region :ensure t)
 
+;; 自动调整缩进
+(use-package aggressive-indent
+  :ensure t
+  :config
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'jade-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'coffee-mode))
+
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
 ;; CtrlP
