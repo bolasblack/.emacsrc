@@ -6,9 +6,12 @@
 ;; 删除到行首
 (bind-key "M-k" 'backward-kill-line)
 
-;; C+w 绑定为：如果有标记则删除标记（C-@），如果没有则向前删除一词
+;; C-w 绑定为：如果有标记则删除标记（C-@），如果没有则向前删除一词
 (do-if-region 'kill-region 'backward-delete-word-or-delim)
 (bind-key "C-w" 'kill-region-or-backward-delete-word-or-delim)
+
+;; C-a 绑定为：移动光标到缩进处，如果已经在缩进处了就移动到行首
+(bind-key "C-a" 'smart-move-beginning-of-line)
 
 ;; C-c C-e : 如果有标记则执行标记，否则执行最近的 S 表达式
 (do-if-region 'eval-region 'eval-last-sexp)
