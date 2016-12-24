@@ -162,8 +162,12 @@
   (global-company-mode t)
   ;; 自动提示的最少字数
   (setq company-minimum-prefix-length 1)
-  ;;(push 'company-robe  company-backends)
-  (push 'company-files company-backends)
+  (setq company-backends
+        '((company-files
+           company-keywords
+           company-dabbrev-code
+           company-dabbrev
+           company-yasnippet)))
 )
 
 ;; 方便的 Lisp 编辑
@@ -182,8 +186,8 @@
 (use-package yasnippet
   :ensure t
   :config
-  (yas-global-mode 1)
-  (add-to-list 'yas-snippet-dirs dir-snippet))
+  (add-to-list 'yas-snippet-dirs dir-snippet)
+  (yas-global-mode 1))
 
 (use-package drag-stuff :ensure t)
 
@@ -287,16 +291,35 @@
                 nil nil "bplist"])
   ;;It is necessary to perform an update!
   (jka-compr-update))
-;; 编辑 html 模板时执行多种高亮的主模式
 (use-package web-mode
   :ensure t
-  :mode ("\\.js[x]?\\'" "\\.erb\\'")
+  :mode ("\\.js[x]?\\'" "\\.erb\\'" "\\.html\\'")
   :config
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-sql-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-attr-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2))
+  (setq web-mode-markup-indent-offset 2)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (let ((backends (make-local-variable 'company-backends)))
+                (add-to-list backends '(company-nxml company-css)))))
+  (defadvice company-yasnippet (before yas-activate-extra-mode-before-company-yasnippet activate)
+    (if (equal major-mode 'web-mode)
+        (let ((curr-lang (web-mode-language-at-pos))
+              (lang-mode-map '(
+                               ("css"  . css-mode)
+                               ("html" . html-mode)
+                               ("js"   . js-mode)
+                               ("jsx"  . js-mode)
+                               )))
+          (-map (lambda (piar)
+                  (if (string= curr-lang (car piar))
+                      (yas-activate-extra-mode (cdr piar))
+                    (yas-deactivate-extra-mode (cdr piar))))
+                lang-mode-map)
+          )))
+  )
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
