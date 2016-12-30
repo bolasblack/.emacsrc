@@ -289,7 +289,7 @@
   (jka-compr-update))
 (use-package web-mode
   :ensure t
-  :mode ("\\.js[x]?\\'" "\\.erb\\'" "\\.html\\'")
+  :mode ("\\.jsx?\\'" "\\.erb\\'" "\\.html\\'")
   :config
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-sql-indent-offset 2)
@@ -304,16 +304,21 @@
     (if (equal major-mode 'web-mode)
         (let ((curr-lang (web-mode-language-at-pos))
               (lang-mode-map '(
-                               ("css"  . css-mode)
-                               ("html" . html-mode)
-                               ("js"   . js-mode)
-                               ("jsx"  . js-mode)
+                               ("css"        . css-mode)
+                               ("html"       . html-mode)
+                               ("javascript" . js-mode)
+                               ("jsx"        . js-mode)
                                )))
-          (-map (lambda (piar)
-                  (if (string= curr-lang (car piar))
-                      (yas-activate-extra-mode (cdr piar))
-                    (yas-deactivate-extra-mode (cdr piar))))
-                lang-mode-map)
+          (-reduce-from (lambda (matched-mode piar)
+                          (if (string= curr-lang (car piar))
+                              (progn
+                                (yas-activate-extra-mode (cdr piar))
+                                (cdr piar))
+                            (progn
+                              (if (not (equal (cdr piar) matched-mode))
+                                  (yas-deactivate-extra-mode (cdr piar)))
+                              matched-mode)))
+                        nil lang-mode-map)
           )))
   )
 
