@@ -321,6 +321,15 @@
                         nil lang-mode-map)
           )))
   )
+(use-package ledger-mode
+  :ensure t
+  :mode ("\\.beancount\\'" "\\.bean\\'")
+  :init
+  (add-hook 'ledger-mode-hook
+            (lambda ()
+              (bind-key "C-M-i" 'ledger-magic-tab ledger-mode-map)
+              ))
+  )
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 

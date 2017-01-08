@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: account
+# key: account
+# expand-env: ((yas-indent-line 'fixed))
+# --
+${1:`(format-time-string "%Y-%m-%d")`} ${2:$$(yas-choose-value '("close" "open"))} ${5:$$(yas-choose-value '("Assets" "Liabilities" "Income" "Expenses"))}:$0

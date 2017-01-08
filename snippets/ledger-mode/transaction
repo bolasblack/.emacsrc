@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: transaction
+# key: transaction
+# expand-env: ((yas-triggers-in-field t) (yas-indent-line 'fixed))
+# --
+${1:`(format-time-string "%Y-%m-%d")`} ${3:*}${5: "${6:Payee}"} "${4:Narration}"
+    ${0:$$(yas-expand-snippet (yas-lookup-snippet "cost"))}

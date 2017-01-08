@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cost
+# key: cost
+# expand-env: ((yas-triggers-in-field t))
+# --
+${1:Account}  ${2:Amout} ${3:CNY}${4: ; $5}${6:
+    ${0:$$(yas-expand-snippet (yas-lookup-snippet "cost"))}}
