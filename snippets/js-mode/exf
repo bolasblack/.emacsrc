@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: export ... from ...
+# key: exf
+# --
+export {$2${3: as $4}} from '$1'$0
