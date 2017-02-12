@@ -289,7 +289,8 @@
   (jka-compr-update))
 (use-package web-mode
   :ensure t
-  :mode ("\\.jsx?\\'" "\\.erb\\'" "\\.html\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.erb\\'" "\\.html\\'")
+  :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-sql-indent-offset 2)
