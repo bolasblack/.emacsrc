@@ -6,6 +6,9 @@
 ;; Emacs Lisp
 (add-to-list 'auto-mode-alist '("Cask" . emacs-lisp-mode))
 
+;; Clojure
+(add-hook 'clojure-mode-hook (lambda () (setq-local prettify-symbols-alist nil)))
+
 ;; Ruby
 (add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.cap$" . ruby-mode))

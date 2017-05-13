@@ -346,9 +346,17 @@
 ;;   :ensure t)
 
 ;; Clojure 开发环境
+(use-package inf-clojure
+  :ensure t
+  :config
+  (setq inf-clojure-generic-cmd "lumo -d")
+  (setq inf-clojure-boot-cmd "lumo -d")
+  (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
 ;; (use-package cider
 ;;   :ensure t
 ;;   :pin melpa)
+
+;; Lisp 开发环境
 (use-package parinfer
   :ensure t
   :init
