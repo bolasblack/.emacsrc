@@ -71,10 +71,6 @@
   :config
   (indent-guide-global-mode))
 
-;; JavaScript CSS HTML 格式化
-;;   npm install js-beautify -g
-(use-package web-beautify :ensure t)
-
 ;; 快速跳转到界面上某个地方
 (use-package ace-jump-mode
   :ensure t
@@ -288,7 +284,7 @@
   (jka-compr-update))
 (use-package web-mode
   :ensure t
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.erb\\'" "\\.html\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
   (setq web-mode-css-indent-offset 2)
@@ -370,3 +366,15 @@
     (add-hook 'common-lisp-mode-hook #'parinfer-mode)
     (add-hook 'scheme-mode-hook #'parinfer-mode)
     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+
+;; 网页前端开发环境
+(use-package rainbow-mode
+  :ensure t
+  :init
+  (progn
+    (add-hook 'web-mode-hook #'rainbow-mode)
+    (add-hook 'css-mode-hook #'rainbow-mode)
+    (add-hook 'sass-mode-hook #'rainbow-mode)
+    (add-hook 'scss-mode-hook #'rainbow-mode)))
+
+(use-package web-beautify :ensure t) ;; npm install js-beautify -g
