@@ -163,20 +163,7 @@
            company-keywords
            company-dabbrev-code
            company-dabbrev
-           company-yasnippet)))
-)
-
-;; 方便的 Lisp 编辑
-(use-package paredit
-  :ensure t
-  :config
-  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook                  #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook                        #'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook                        #'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook            #'enable-paredit-mode)
-  (add-hook 'scheme-mode-hook                      #'enable-paredit-mode))
+           company-yasnippet))))
 
 ;; snippet 引擎
 (use-package yasnippet
@@ -359,30 +346,53 @@
 ;; Lisp 开发环境
 (use-package parinfer
   :ensure t
-  :init
-  (progn
-    (setq parinfer-extensions
-          '(defaults       ; should be included.
-             pretty-parens  ; different paren styles for different modes.
-             evil           ; If you use Evil.
-             lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
-             paredit        ; Introduce some paredit commands.
-             smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-             smart-yank))   ; Yank behavior depend on mode.
-    (add-hook 'clojure-mode-hook #'parinfer-mode)
-    (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'common-lisp-mode-hook #'parinfer-mode)
-    (add-hook 'scheme-mode-hook #'parinfer-mode)
-    (add-hook 'lisp-mode-hook #'parinfer-mode)))
+  :config
+  (setq parinfer-extensions
+        '(defaults       ; should be included.
+           pretty-parens  ; different paren styles for different modes.
+           evil           ; If you use Evil.
+           lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
+           paredit        ; Introduce some paredit commands.
+           smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
+           smart-yank))   ; Yank behavior depend on mode.
+  (add-hook 'parinfer-mode-enable-hook #'parinfer--switch-to-paren-mode)
+  (add-hook 'clojure-mode-hook #'parinfer-mode)
+  (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+  (add-hook 'common-lisp-mode-hook #'parinfer-mode)
+  (add-hook 'scheme-mode-hook #'parinfer-mode)
+  (add-hook 'lisp-mode-hook #'parinfer-mode))
+
+
+(use-package paredit
+  :ensure t
+  :config
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'clojurescript-mode-hook               #'enable-paredit-mode)
+  (add-hook 'clojure-mode-hook                     #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook                  #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook                        #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook                        #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook            #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook                      #'enable-paredit-mode))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (add-hook 'clojurescript-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'common-lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode))
 
 ;; 网页前端开发环境
 (use-package rainbow-mode
   :ensure t
-  :init
-  (progn
-    (add-hook 'web-mode-hook #'rainbow-mode)
-    (add-hook 'css-mode-hook #'rainbow-mode)
-    (add-hook 'sass-mode-hook #'rainbow-mode)
-    (add-hook 'scss-mode-hook #'rainbow-mode)))
+  :config
+  (add-hook 'web-mode-hook #'rainbow-mode)
+  (add-hook 'css-mode-hook #'rainbow-mode)
+  (add-hook 'sass-mode-hook #'rainbow-mode)
+  (add-hook 'scss-mode-hook #'rainbow-mode))
 
 (use-package web-beautify :ensure t) ;; npm install js-beautify -g
