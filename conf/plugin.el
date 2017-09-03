@@ -215,9 +215,10 @@
   :config
   (projectile-global-mode t)
   (setq projectile-completion-system 'ivy)
+  (add-to-list 'projectile-project-root-files-bottom-up "package.json")
   :bind
   (:map evil-normal-state-map
-   ("C-p" . projectile-find-file)))
+        ("C-p" . projectile-find-file)))
 
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter
@@ -283,7 +284,7 @@
   (jka-compr-update))
 (use-package web-mode
   :ensure t
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
   (setq web-mode-css-indent-offset 2)
@@ -323,6 +324,13 @@
   (add-hook 'ledger-mode-hook
             (lambda ()
               (bind-key "C-M-i" 'ledger-magic-tab ledger-mode-map))))
+
+(use-package hcl-mode
+  :ensure t
+  :mode ("\\.tf\\'"))
+
+(use-package dockerfile-mode
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
