@@ -101,30 +101,30 @@
   :config
   (evil-mode 1))
 
+(use-package general
+  :ensure t
+  :config
+  (general-evil-setup))
+
 (use-package evil-nerd-commenter
   :ensure t
-  :config
-  (eval-after-load 'evil-leader
-    '(progn
-       (evil-leader/set-key
-         "ci" 'evilnc-comment-or-uncomment-lines
-         "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-         "cc" 'evilnc-copy-and-comment-lines
-         "cp" 'evilnc-comment-or-uncomment-paragraphs
-         "cr" 'comment-or-uncomment-region
-         "cv" 'evilnc-toggle-invert-comment-line-by-line
-       ))))
-
-(use-package evil-leader
-  :ensure t
-  :config
-  (global-evil-leader-mode)
-  (evil-leader/set-leader ","))
+  :after general
+  :general
+  (general-nmap :prefix ","
+                "ci" 'evilnc-comment-or-uncomment-lines
+                "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+                "cc" 'evilnc-copy-and-comment-lines
+                "cp" 'evilnc-comment-or-uncomment-paragraphs
+                "cr" 'comment-or-uncomment-region
+                "cv" 'evilnc-toggle-invert-comment-line-by-line))
 
 (use-package evil-easymotion
   :ensure t
   :config
-  (evilem-default-keybindings (kbd ",")))
+  (setq avy-style 'at-full)
+  (setq avy-background t)
+  (define-key evil-motion-state-map (kbd ",") nil)
+  (evilem-default-keybindings (kbd ",,")))
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
