@@ -52,6 +52,7 @@
 ;; 另外一种补全方式
 (use-package ivy
   :ensure t
+  :delight
   :config
   (ivy-mode 1)
   (zenburn-with-color-variables
@@ -61,8 +62,7 @@
      `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-green :weight bold))))
      `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-green :weight bold))))
      `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-green :weight bold))))
-     `(ivy-current-match ((t :background ,zenburn-bg+1 :foreground ,zenburn-fg)))
-     )))
+     `(ivy-current-match ((t :background ,zenburn-bg+1 :foreground ,zenburn-fg))))))
 
 ;; 缩进辅助线
 (use-package indent-guide
@@ -78,11 +78,13 @@
   ("C-c C-c" . ace-jump-word-mode))
 
 ;; 让 Emacs 支持在 Shell 里自定义的 PATH
-(use-package exec-path-from-shell :ensure t)
+(use-package exec-path-from-shell
+  :ensure t)
 
 ;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
 (use-package which-key
   :ensure t
+  :delight
   :config
   (which-key-mode))
 
@@ -91,6 +93,9 @@
   :ensure t
   :config
   (smooth-scrolling-mode))
+
+(use-package delight
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 (use-package evil
@@ -132,7 +137,6 @@
 (use-package flycheck
   :ensure t
   :config
-  (use-package flycheck-cask :ensure t)
   (global-flycheck-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup)
   (add-hook 'emacs-lisp-mode-hook
@@ -140,20 +144,27 @@
   (add-hook 'coffee-mode-hook
             (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
 
+(use-package flycheck-cask
+  :after flycheck
+  :ensure t)
+
 ;; 自动标点配对（不只是标点配对）
 (use-package smartparens
   :ensure t
+  :delight
   :config
   (use-package smartparens-config)
   (smartparens-global-mode))
 
 (use-package undo-tree
   :ensure t
+  :delight " undotree"
   :config
   (global-undo-tree-mode t))
 
 (use-package company
   :ensure t
+  :delight
   :config
   (global-company-mode t)
   ;; 自动提示的最少字数
@@ -211,6 +222,7 @@
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter
   :ensure t
+  :delight
   :config
   (global-git-gutter-mode t)
   (git-gutter:linum-setup)
@@ -227,7 +239,7 @@
 
   (custom-set-variables
    '(git-gutter:unchanged-sign " "))
-)
+  )
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
@@ -346,6 +358,7 @@
 ;; Lisp 开发环境
 (use-package parinfer
   :ensure t
+  :delight '(:eval (if (eq 'paren parinfer--mode) " P:Paren" " P:Indent"))
   :config
   (setq parinfer-extensions
         '(defaults       ; should be included.
@@ -362,9 +375,9 @@
   (add-hook 'scheme-mode-hook #'parinfer-mode)
   (add-hook 'lisp-mode-hook #'parinfer-mode))
 
-
 (use-package paredit
   :ensure t
+  :delight
   :config
   (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
   (add-hook 'clojurescript-mode-hook               #'enable-paredit-mode)
@@ -378,6 +391,7 @@
 
 (use-package rainbow-delimiters
   :ensure t
+  :delight
   :config
   (add-hook 'clojurescript-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
@@ -389,6 +403,7 @@
 ;; 网页前端开发环境
 (use-package rainbow-mode
   :ensure t
+  :delight
   :config
   (add-hook 'web-mode-hook #'rainbow-mode)
   (add-hook 'css-mode-hook #'rainbow-mode)
