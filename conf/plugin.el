@@ -1,16 +1,19 @@
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
+(use-package delight
+  :ensure t)
+
 (use-package linum
- ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
- ;; https://github.com/kaushalmodi/.emacs.d/issues/4
- ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
- :defer 1
- :ensure t
- :config
- ;; 调整行号栏的格式
- (setq linum-format "%3d ")
- ;; 显示行号
- (global-linum-mode t))
+  ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
+  ;; https://github.com/kaushalmodi/.emacs.d/issues/4
+  ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
+  :defer 1
+  :ensure t
+  :config
+  ;; 调整行号栏的格式
+  (setq linum-format "%3d ")
+  ;; 显示行号
+  (global-linum-mode t))
 
 ;; 给各个窗口编号
 (use-package window-numbering
@@ -94,9 +97,6 @@
   :config
   (smooth-scrolling-mode))
 
-(use-package delight
-  :ensure t)
-
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 (use-package evil
   :ensure t
@@ -130,6 +130,16 @@
   (setq avy-background t)
   (define-key evil-motion-state-map (kbd ",") nil)
   (evilem-default-keybindings (kbd ",,")))
+
+(use-package origami
+  :ensure t
+  :bind
+  (:map evil-normal-state-map ("zo" . origami-open-node))
+  (:map evil-normal-state-map ("zO" . origami-open-node-recursively))
+  (:map evil-normal-state-map ("zc" . origami-close-node))
+  (:map evil-normal-state-map ("zC" . origami-close-node-recursively))
+  (:map evil-normal-state-map ("za" . origami-toggle-node))
+  (:map evil-normal-state-map ("zA" . origami-recursively-toggle-node)))
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
