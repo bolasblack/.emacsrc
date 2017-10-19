@@ -271,6 +271,14 @@
 (use-package yaml-mode :ensure t)
 (use-package nginx-mode :ensure t)
 (use-package jsx-mode :ensure t)
+(use-package typescript-mode
+  :ensure t
+  :delight "ts"
+  :config
+  (setq typescript-indent-level 2)
+  (add-hook 'typescript-mode-hook
+            (lambda ()
+              (tide-setup))))
 (use-package apples-mode ;; AppleScript
   :ensure t
   :mode "\\.applescript\\'"
@@ -294,7 +302,7 @@
   (jka-compr-update))
 (use-package web-mode
   :ensure t
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
   (setq web-mode-css-indent-offset 2)
@@ -304,6 +312,10 @@
   (setq web-mode-markup-indent-offset 2)
   (add-hook 'web-mode-hook
             (lambda ()
+              (let ((file-ext (file-name-extension buffer-file-name)))
+                (when (or (string-equal "tsx" file-ext)
+                          (string-equal "ts" file-ext))
+                  (tide-setup)))
               (let ((backends (make-local-variable 'company-backends)))
                 (add-to-list backends '(company-nxml company-css)))))
   (defadvice company-yasnippet (before yas-activate-extra-mode-before-company-yasnippet activate)
@@ -429,3 +441,5 @@
   (add-hook 'scss-mode-hook #'rainbow-mode))
 
 (use-package web-beautify :ensure t) ;; npm install js-beautify -g
+
+(use-package tide :ensure t)
