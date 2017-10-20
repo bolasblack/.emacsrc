@@ -18,3 +18,5 @@
   (interactive)
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end)))
+
+(provide 'osx-clipboard)

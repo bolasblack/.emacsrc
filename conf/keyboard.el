@@ -1,4 +1,10 @@
 ;; -*- Emacs-Lisp -*-
+(require 'do-if)
+(require 'osx-clipboard)
+(require 'smart-delete)
+
+(provide 'keyboard)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 按键设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31,3 +37,29 @@
 
 ;; C-x C-m 替代 M-x
 (bind-key "C-x C-m" 'execute-extended-command)
+
+(defun backward-kill-line (pos)
+  "kill to the beginning of line"
+  (interactive "d")
+  (beginning-of-line)
+  (delete-region pos (point)))
+
+;; From https://github.com/syl20bnr/spacemacs/blob/master/layers/better-defaults/funcs.el
+(defun smart-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+If ARG is not nil or 1, move forward ARG - 1 lines first. If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))

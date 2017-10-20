@@ -21,16 +21,5 @@
 (add-package-archives gnu)
 (add-package-archives melpa)
 (package-initialize)
-(defvar required-packages
-  '(use-package bind-key dash s f)
-  "A list of packages to ensure are installed at launch.")
-; https://github.com/magnars/dash.el
-; https://github.com/magnars/s.el
-; https://github.com/rejeep/f.el
-(dolist (p required-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
 
-(eval-when-compile
-  (require 'use-package))
-(require 'bind-key)
+(provide 'prepare-package)

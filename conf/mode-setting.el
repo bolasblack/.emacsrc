@@ -37,3 +37,5 @@
 
 ;; XML
 (add-to-list 'auto-mode-alist '("\\.aiml$" . nxml-mode))
+
+(provide 'mode-setting)

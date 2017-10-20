@@ -1,1 +1,0 @@
-(defmacro comment (&rest a))

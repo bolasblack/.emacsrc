@@ -1,4 +1,5 @@
 ;; -*- Emacs-Lisp -*-
+(provide 'smart-delete)
 
 ;; From https://github.com/4DA/emacs-stuff/blob/20a5180eda54c76b7da3ecb1b0a640ea6c04c682/smart-kill.el
 (defun backward-delete-word-or-delim (arg &optional killp)

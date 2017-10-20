@@ -35,3 +35,5 @@ See also `do-if'
 
 \(fn 'if-do-func 'else-do-func)"
   `(do-if (symbol-value mark-active) ,if-do ,else-do))
+
+(provide 'do-if)

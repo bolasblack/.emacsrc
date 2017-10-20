@@ -1,3 +1,7 @@
+;;; -*- lexical-binding: t -*-
+(require 'use-package)
+(require 'smart-delete)
+
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
 (use-package delight
@@ -193,7 +197,8 @@
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode 1))
 
-(use-package drag-stuff :ensure t)
+(use-package drag-stuff
+  :ensure t)
 
 ;; 光标移动到一个单词后会高亮所有相同的单词
 (use-package auto-highlight-symbol
@@ -212,16 +217,20 @@
 ;;    ("C-c h" . mc/mark-all-like-this)))
 
 ;; 便捷选区
-(use-package expand-region :ensure t)
+(use-package expand-region
+  :ensure t)
 
 ;; 自动调整缩进
-(use-package aggressive-indent :ensure t)
+(use-package aggressive-indent
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
 ;; CtrlP
 (use-package projectile
   :ensure t
+  :delight
+  '(:eval (concat " p[" (projectile-project-name) "]"))
   :config
   (projectile-global-mode t)
   (setq projectile-completion-system 'ivy)
@@ -249,8 +258,7 @@
   (set-face-attribute 'git-gutter:separator nil)
 
   (custom-set-variables
-   '(git-gutter:unchanged-sign " "))
-  )
+   '(git-gutter:unchanged-sign " ")))
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
@@ -375,6 +383,12 @@
 ;;   :ensure t)
 
 ;; Clojure 开发环境
+(use-package clojure-mode
+  :ensure t
+  :delight
+  (clojure-mode "cl")
+  (clojurescript-mode "cljs"))
+
 (use-package inf-clojure
   :ensure t
   :config
@@ -386,6 +400,10 @@
 ;;   :pin melpa)
 
 ;; Lisp 开发环境
+(delight 'emacs-lisp-mode
+         '("Elisp" (lexical-binding ":Lex" ":Dyn"))
+         :major)
+
 (use-package parinfer
   :ensure t
   :delight '(:eval (if (eq 'paren parinfer--mode) " P:Paren" " P:Indent"))
@@ -443,3 +461,5 @@
 (use-package web-beautify :ensure t) ;; npm install js-beautify -g
 
 (use-package tide :ensure t)
+
+(provide 'plugin)
