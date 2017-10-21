@@ -22,7 +22,13 @@
       (scroll-bar-mode -1)
 
       ;; 让 Emacs 可以直接打开和显示图片。
-      (auto-image-file-mode t)))
+      (auto-image-file-mode t)
+
+      ;; 显示时间
+      (display-time)
+
+      ;; 时间的格式
+      (setq display-time-format "%H:%M @ %m.%d")))
 
 ;; 关闭启动时的 “开机画面”
 (setq inhibit-startup-message t)
@@ -43,12 +49,6 @@
 ;; 打开就启用 text 模式
 (set-default major-mode 'text-mode)
 
-;; 显示时间
-(display-time)
-
-;; 时间的格式
-(setq display-time-format "%H:%M @ %m.%d")
-
 ;; 时间的变化频率
 (setq display-time-interval 10)
 
@@ -62,10 +62,10 @@
               (lambda ()
                 ;; 把 lambda 显示成 λ
                 (push '("lambda" . ?λ) prettify-symbols-alist)))
-    (global-prettify-symbols-mode t)
-))
+    (global-prettify-symbols-mode t)))
 
 (delete-selection-mode -1)
+
 (setq-default indent-tabs-mode nil)
 
 (provide 'face)
