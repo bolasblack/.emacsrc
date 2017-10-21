@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 (defmacro comment (&rest body))
 
 (eval-and-compile
@@ -12,9 +14,10 @@
 
   (mapc #'(lambda (path)
             (add-to-list 'load-path path))
-        (list dir-conf dir-lisp))
+        (list dir-rc dir-conf dir-lisp))
 
   (defvar use-package-verbose t)
+  (defvar use-package-inject-hooks t)
   (require 'prepare-package)
 
   ;; https://github.com/jwiegley/use-package

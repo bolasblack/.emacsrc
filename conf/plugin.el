@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(require 'use-package)
+
 (require 'smart-delete)
 
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
@@ -43,16 +43,14 @@
   ;; Config: https://github.com/m2ym/popwin-el#special-display-config
   (setq popwin:popup-window-height 15)
 
-  (let ((c '(
-             ;; Emacs
+  (let ((c '(;; Emacs
              ("*Procces List*" :height 20)
              ("*Warnings*" :height 20)
              ("*Messages*" :height 20)
              ("*Backtrace*" :height 20)
              ("*Compile-Log*" :height 20 :noselect t)
              ;; Helm
-             ("^\*helm.*\*$" :regexp t)
-             )))
+             ("^\*helm.*\*$" :regexp t))))
     (dolist (config c)
       (push config popwin:special-display-config))))
 
@@ -154,7 +152,11 @@
   (global-flycheck-mode)
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup)
   (add-hook 'emacs-lisp-mode-hook
-            (lambda () (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))))
+            (lambda ()
+              (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+              (when (s-starts-with? dir-conf (buffer-file-name))
+                (make-local-variable 'flycheck-emacs-lisp-load-path)
+                (setq flycheck-emacs-lisp-load-path t))))
   (add-hook 'coffee-mode-hook
             (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
 
@@ -262,23 +264,41 @@
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
-(use-package markdown-mode :ensure t)
-(use-package coffee-mode :ensure t)
-(use-package jade-mode :ensure t)
+(use-package markdown-mode
+  :ensure t)
+
+(use-package coffee-mode
+  :ensure t)
+
+(use-package jade-mode
+  :ensure t)
+
 (use-package sass-mode
   :ensure t
   :mode "\\.styl\\'")
+
 (use-package lua-mode
   :ensure t
   :mode "\\.lua\\'"
   :interpreter "lua"
   :config
   (setq lua-indent-level 2))
-(use-package less-css-mode :ensure t)
-(use-package gitignore-mode :ensure t)
-(use-package yaml-mode :ensure t)
-(use-package nginx-mode :ensure t)
-(use-package jsx-mode :ensure t)
+
+(use-package less-css-mode
+  :ensure t)
+
+(use-package gitignore-mode
+  :ensure t)
+
+(use-package yaml-mode
+  :ensure t)
+
+(use-package nginx-mode
+  :ensure t)
+
+(use-package jsx-mode
+  :ensure t)
+
 (use-package typescript-mode
   :ensure t
   :delight "ts"
@@ -286,7 +306,9 @@
   (setq typescript-indent-level 2)
   (add-hook 'typescript-mode-hook
             (lambda ()
+              (yas-activate-extra-mode 'js-mode)
               (tide-setup))))
+
 (use-package apples-mode ;; AppleScript
   :ensure t
   :mode "\\.applescript\\'"
@@ -308,6 +330,7 @@
                 nil nil "bplist"])
   ;;It is necessary to perform an update!
   (jka-compr-update))
+
 (use-package web-mode
   :ensure t
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
@@ -327,25 +350,23 @@
               (let ((backends (make-local-variable 'company-backends)))
                 (add-to-list backends '(company-nxml company-css)))))
   (defadvice company-yasnippet (before yas-activate-extra-mode-before-company-yasnippet activate)
-    (if (equal major-mode 'web-mode)
-        (let ((curr-lang (web-mode-language-at-pos))
-              (lang-mode-map '(
-                               ("css"        . css-mode)
-                               ("html"       . html-mode)
-                               ("javascript" . js-mode)
-                               ("jsx"        . js-mode))))
+    (cond (equal major-mode 'web-mode)
+          (let ((curr-lang (web-mode-language-at-pos))
+                (lang-mode-map '(("css"        . css-mode)
+                                 ("html"       . html-mode)
+                                 ("javascript" . js-mode)
+                                 ("jsx"        . js-mode))))
 
-          (-reduce-from (lambda (matched-mode piar)
-                          (if (string= curr-lang (car piar))
+            (-reduce-from (lambda (matched-mode piar)
+                            (if (string= curr-lang (car piar))
+                                (progn
+                                  (yas-activate-extra-mode (cdr piar))
+                                  (cdr piar))
                               (progn
-                                (yas-activate-extra-mode (cdr piar))
-                                (cdr piar))
-                            (progn
-                              (if (not (equal (cdr piar) matched-mode))
-                                  (yas-deactivate-extra-mode (cdr piar)))
-                              matched-mode)))
-                        nil lang-mode-map)))))
-
+                                (if (not (equal (cdr piar) matched-mode))
+                                    (yas-deactivate-extra-mode (cdr piar)))
+                                matched-mode)))
+                          nil lang-mode-map)))))
 
 (use-package ledger-mode
   :ensure t
@@ -458,8 +479,11 @@
   (add-hook 'sass-mode-hook #'rainbow-mode)
   (add-hook 'scss-mode-hook #'rainbow-mode))
 
-(use-package web-beautify :ensure t) ;; npm install js-beautify -g
+(use-package web-beautify
+  ;; (shell-command "npm install js-beautify -g")
+  :ensure t)
 
-(use-package tide :ensure t)
+(use-package tide
+  :ensure t)
 
 (provide 'plugin)
