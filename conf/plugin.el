@@ -415,7 +415,12 @@
   :ensure t
   :delight
   (clojure-mode "cl")
-  (clojurescript-mode "cljs"))
+  (clojurescript-mode "cljs")
+  :config
+  (define-clojure-indent
+    (go-let 'defun)
+    (alet 'defun)
+    (mlet 'defun)))
 
 (use-package inf-clojure
   :ensure t
