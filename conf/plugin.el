@@ -333,7 +333,7 @@
 
 (use-package web-mode
   :ensure t
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
   (setq web-mode-css-indent-offset 2)
@@ -348,25 +348,32 @@
                           (string-equal "ts" file-ext))
                   (tide-setup)))
               (let ((backends (make-local-variable 'company-backends)))
-                (add-to-list backends '(company-nxml company-css)))))
-  (defadvice company-yasnippet (before yas-activate-extra-mode-before-company-yasnippet activate)
-    (cond (equal major-mode 'web-mode)
-          (let ((curr-lang (web-mode-language-at-pos))
-                (lang-mode-map '(("css"        . css-mode)
-                                 ("html"       . html-mode)
-                                 ("javascript" . js-mode)
-                                 ("jsx"        . js-mode))))
-
-            (-reduce-from (lambda (matched-mode piar)
-                            (if (string= curr-lang (car piar))
-                                (progn
-                                  (yas-activate-extra-mode (cdr piar))
-                                  (cdr piar))
+                (mapcar (lambda (c) (add-to-list 'backends c))
+                        '(company-nxml company-css company-web-html)))))
+  (defadvice indent-for-tab-command (around web-mode-setup-yas-extra-mode activate)
+    (interactive)
+    (if (and (equal major-mode 'web-mode)
+             (called-interactively-p 'interactive))
+        (let ((curr-lang (web-mode-language-at-pos))
+              (lang-mode-map '(("css"        . css-mode)
+                               ("html"       . html-mode)
+                               ("javascript" . js-mode)
+                               ("jsx"        . js-mode))))
+          (-reduce-from (lambda (matched-mode pair)
+                          (if (string= curr-lang (car pair))
                               (progn
-                                (if (not (equal (cdr piar) matched-mode))
-                                    (yas-deactivate-extra-mode (cdr piar)))
-                                matched-mode)))
-                          nil lang-mode-map)))))
+                                (yas-activate-extra-mode (cdr pair))
+                                (cdr pair))
+                            (progn
+                              (if (not (equal (cdr pair) matched-mode))
+                                  (yas-deactivate-extra-mode (cdr pair)))
+                              matched-mode)))
+                        nil lang-mode-map)
+          (let ((tab-key-fn (key-binding (kbd "<tab>"))))
+            (if tab-key-fn
+                (if (equal #'indent-for-tab-command tab-key-fn)
+                    (call-interactively (ad-get-orig-definition 'indent-for-tab-command))
+                  (call-interactively tab-key-fn))))))))
 
 (use-package ledger-mode
   :ensure t
