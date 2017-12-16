@@ -3,6 +3,9 @@
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; mini window 的最小高度，百分比
+(setq max-mini-window-height 0.75)
+
 ;; Disable lock-files
 (setq create-lockfiles nil)
 
