@@ -370,10 +370,10 @@
                               matched-mode)))
                         nil lang-mode-map)
           (let ((tab-key-fn (key-binding (kbd "<tab>"))))
-            (if tab-key-fn
-                (if (equal #'indent-for-tab-command tab-key-fn)
-                    (call-interactively (ad-get-orig-definition 'indent-for-tab-command))
-                  (call-interactively tab-key-fn))))))))
+            (if (and tab-key-fn
+                     (not (equal #'indent-for-tab-command tab-key-fn)))
+                (call-interactively tab-key-fn)
+              (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))))
 
 (use-package ledger-mode
   :ensure t
