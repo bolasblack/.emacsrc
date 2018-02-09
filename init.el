@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
-(defmacro comment (&rest body))
+(defmacro comment (&rest _))
 
 (eval-and-compile
   ;; .emacs.d 文件地址
@@ -14,19 +14,24 @@
 
   (mapc #'(lambda (path)
             (add-to-list 'load-path path))
-        (list dir-rc dir-conf dir-lisp))
+        (list dir-rc dir-conf dir-lisp)))
 
-  (defvar use-package-verbose t)
-  (defvar use-package-inject-hooks t)
-  (require 'prepare-package)
+(defvar use-package-verbose t)
+(defvar use-package-inject-hooks t)
+(require 'prepare-package)
+(require 'cl-lib)
 
-  ;; https://github.com/jwiegley/use-package
-  ;; https://github.com/magnars/dash.el
-  ;; https://github.com/magnars/s.el
-  ;; https://github.com/rejeep/f.el
-  (dolist (p '(use-package bind-key dash s f))
-    (when (not (package-installed-p p))
-      (package-install p))
+;; https://github.com/jwiegley/use-package
+;; https://github.com/magnars/dash.el
+;; https://github.com/magnars/s.el
+;; https://github.com/rejeep/f.el
+(let* ((core-packages '(use-package bind-key dash s f))
+       (uninstalled-packages (cl-remove-if #'package-installed-p core-packages)))
+  (when uninstalled-packages
+    (package-refresh-contents)
+    (dolist (p uninstalled-packages)
+      (package-install p)))
+  (dolist (p core-packages)
     (require p)))
 
 (dolist (conf-file '(global plugin keyboard mode-setting face))

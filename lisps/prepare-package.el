@@ -1,3 +1,5 @@
+(require 'package)
+
 (defvar package-archives-mapping
   '(("gnu"          . "http://elpa.gnu.org/packages/")
     ("melpa"        . "http://melpa.org/packages/")
@@ -13,13 +15,11 @@
      (unless mapping
        (error "Unknown package archive: %s" source-name))
      (unless (member mapping package-archives)
-       (message "package refresh")
-       (setq package-contents-refreshed nil))
+       (message "package refresh"))
      (add-to-list 'package-archives mapping)))
 
-(require 'package)
 (add-package-archives gnu)
 (add-package-archives melpa)
-(package-initialize)
+(package-initialize t)
 
 (provide 'prepare-package)
