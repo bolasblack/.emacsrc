@@ -95,4 +95,7 @@
 ;; 设置进程的 I/O 操作的编码
 (modify-coding-system-alist 'process "*" 'utf-8)
 
+(setq byte-compile-dynamic nil
+      byte-compile-warnings '(not free-vars unresolved noruntime interactive-only lexical make-local))
+
 (provide 'global)
