@@ -32,7 +32,7 @@
 
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
-(use-package help-fns+ :ensure t)
+;;(use-package help-fns+ :ensure t)
 
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
@@ -101,12 +101,12 @@
 
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 (use-package evil
-  :ensure t
   :defer 1
-  :bind
-  (:map evil-normal-state-map ("C-u" . scroll-down-command))
+  :ensure t
   :config
-  (evil-mode 1))
+  (evil-mode)
+  :bind
+  (:map evil-normal-state-map ("C-u" . scroll-down-command)))
 
 (use-package general
   :ensure t
@@ -118,15 +118,16 @@
   :after general
   :general
   (general-nmap :prefix ","
-                "ci" 'evilnc-comment-or-uncomment-lines
-                "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-                "cc" 'evilnc-copy-and-comment-lines
-                "cp" 'evilnc-comment-or-uncomment-paragraphs
-                "cr" 'comment-or-uncomment-region
-                "cv" 'evilnc-toggle-invert-comment-line-by-line))
+    "ci" 'evilnc-comment-or-uncomment-lines
+    "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+    "cc" 'evilnc-copy-and-comment-lines
+    "cp" 'evilnc-comment-or-uncomment-paragraphs
+    "cr" 'comment-or-uncomment-region
+    "cv" 'evilnc-toggle-invert-comment-line-by-line))
 
 (use-package evil-easymotion
   :ensure t
+  :after evil
   :config
   (setq avy-style 'at-full)
   (setq avy-background t)
@@ -135,6 +136,7 @@
 
 (use-package origami
   :ensure t
+  :after evil
   :bind
   (:map evil-normal-state-map ("zo" . origami-open-node))
   (:map evil-normal-state-map ("zO" . origami-open-node-recursively))
@@ -150,7 +152,6 @@
   :ensure t
   :config
   (global-flycheck-mode)
-  (add-hook 'flycheck-mode-hook 'flycheck-cask-setup)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
@@ -159,10 +160,6 @@
                 (setq flycheck-emacs-lisp-load-path t))))
   (add-hook 'coffee-mode-hook
             (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
-
-(use-package flycheck-cask
-  :after flycheck
-  :ensure t)
 
 ;; 自动标点配对（不只是标点配对）
 (use-package smartparens
@@ -231,11 +228,12 @@
 ;; CtrlP
 (use-package projectile
   :ensure t
+  :after evil
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :config
-  (projectile-global-mode t)
   (setq projectile-completion-system 'ivy)
+  (projectile-mode)
   (add-to-list 'projectile-project-root-files-bottom-up "package.json")
   :bind
   (:map evil-normal-state-map
@@ -368,12 +366,12 @@
                               (if (not (equal (cdr pair) matched-mode))
                                   (yas-deactivate-extra-mode (cdr pair)))
                               matched-mode)))
-                        nil lang-mode-map)
-          (let ((tab-key-fn (key-binding (kbd "<tab>"))))
-            (if (and tab-key-fn
-                     (not (equal #'indent-for-tab-command tab-key-fn)))
-                (call-interactively tab-key-fn)
-              (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))))
+                        nil lang-mode-map)))
+    (let ((tab-key-fn (key-binding (kbd "<tab>"))))
+      (if (and tab-key-fn
+               (not (equal #'indent-for-tab-command tab-key-fn)))
+          (call-interactively tab-key-fn)
+        (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))
 
 (use-package ledger-mode
   :ensure t
@@ -389,6 +387,10 @@
 
 (use-package dockerfile-mode
   :ensure t)
+
+(use-package graphql-mode
+  :ensure t
+  :mode ("\\.gql\\'" "\\.graphql\\'"))
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
