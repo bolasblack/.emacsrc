@@ -4,15 +4,18 @@
 
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
+(use-package bind-key
+  :straight t)
+
 (use-package delight
-  :ensure t)
+  :straight t)
 
 (use-package linum
   ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
   ;; https://github.com/kaushalmodi/.emacs.d/issues/4
   ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
   :defer 1
-  :ensure t
+  :straight t
   :config
   ;; 调整行号栏的格式
   (setq linum-format "%3d ")
@@ -21,22 +24,23 @@
 
 ;; 给各个窗口编号
 (use-package window-numbering
-  :ensure t
+  :straight t
   :config
   (window-numbering-mode))
 
 (use-package zenburn-theme
-  :ensure t
+  :straight t
   :config
   (load-theme 'zenburn t))
 
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
-;;(use-package help-fns+ :ensure t)
+(use-package help-fns+
+  :straight t)
 
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
-  :ensure t
+  :straight t
   :config
   (popwin-mode t)
 
@@ -56,7 +60,7 @@
 
 ;; 另外一种补全方式
 (use-package ivy
-  :ensure t
+  :straight t
   :delight
   :config
   (ivy-mode 1)
@@ -71,50 +75,53 @@
 
 ;; 缩进辅助线
 (use-package indent-guide
-  :ensure t
+  :straight t
   :defer 1
   :config
   (indent-guide-global-mode))
 
 ;; 快速跳转到界面上某个地方
 (use-package ace-jump-mode
-  :ensure t
+  :straight t
   :bind
   ("C-c C-c" . ace-jump-word-mode))
 
 ;; 让 Emacs 支持在 Shell 里自定义的 PATH
 (use-package exec-path-from-shell
-  :ensure t)
+  :straight t)
 
 ;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
 (use-package which-key
-  :ensure t
+  :straight t
   :delight
   :config
   (which-key-mode))
 
 ;; 使用 C-p C-n 时平滑滚动，而不是直接向上/下一页跳几行
 (use-package smooth-scrolling
-  :ensure t
+  :straight t
   :config
   (smooth-scrolling-mode))
 
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
+(straight-override-recipe
+ '(undo-tree :host github
+             :repo "emacsmirror/undo-tree"))
 (use-package evil
   :defer 1
-  :ensure t
+  :straight t
   :config
   (evil-mode)
   :bind
   (:map evil-normal-state-map ("C-u" . scroll-down-command)))
 
 (use-package general
-  :ensure t
+  :straight t
   :config
   (general-evil-setup))
 
 (use-package evil-nerd-commenter
-  :ensure t
+  :straight t
   :after general
   :general
   (general-nmap :prefix ","
@@ -126,7 +133,7 @@
     "cv" 'evilnc-toggle-invert-comment-line-by-line))
 
 (use-package evil-easymotion
-  :ensure t
+  :straight t
   :after evil
   :config
   (setq avy-style 'at-full)
@@ -135,7 +142,7 @@
   (evilem-default-keybindings (kbd ",,")))
 
 (use-package origami
-  :ensure t
+  :straight t
   :after evil
   :bind
   (:map evil-normal-state-map ("zo" . origami-open-node))
@@ -149,7 +156,7 @@
 
 ;; 语法检查
 (use-package flycheck
-  :ensure t
+  :straight t
   :config
   (global-flycheck-mode)
   (add-hook 'emacs-lisp-mode-hook
@@ -163,20 +170,20 @@
 
 ;; 自动标点配对（不只是标点配对）
 (use-package smartparens
-  :ensure t
+  :straight t
   :delight
   :config
   (use-package smartparens-config)
   (smartparens-global-mode))
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :delight " undotree"
   :config
   (global-undo-tree-mode t))
 
 (use-package company
-  :ensure t
+  :straight t
   :delight
   :config
   (global-company-mode t)
@@ -191,23 +198,23 @@
 
 ;; snippet 引擎
 (use-package yasnippet
-  :ensure t
+  :straight t
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode 1))
 
 (use-package drag-stuff
-  :ensure t)
+  :straight t)
 
 ;; 光标移动到一个单词后会高亮所有相同的单词
 (use-package auto-highlight-symbol
-  :ensure t
+  :straight t
   :config
   (auto-highlight-symbol-mode))
 
 ;; Sublime Text 的多光标模式
 ;; (use-package multiple-cursors
-;;   :ensure t
+;;   :straight t
 ;;   :bind
 ;;   (("C-c C-n" . mc/mark-next-lines)
 ;;    ("C-c C-p" . mc/mark-previous-lines)
@@ -217,17 +224,17 @@
 
 ;; 便捷选区
 (use-package expand-region
-  :ensure t)
+  :straight t)
 
 ;; 自动调整缩进
 (use-package aggressive-indent
-  :ensure t)
+  :straight t)
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
 ;; CtrlP
 (use-package projectile
-  :ensure t
+  :straight t
   :after evil
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
@@ -241,7 +248,7 @@
 
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter
-  :ensure t
+  :straight t
   :delight
   :config
   (global-git-gutter-mode t)
@@ -263,42 +270,42 @@
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :ensure t)
+  :straight t)
 
 (use-package coffee-mode
-  :ensure t)
+  :straight t)
 
 (use-package jade-mode
-  :ensure t)
+  :straight t)
 
 (use-package sass-mode
-  :ensure t
+  :straight t
   :mode "\\.styl\\'")
 
 (use-package lua-mode
-  :ensure t
+  :straight t
   :mode "\\.lua\\'"
   :interpreter "lua"
   :config
   (setq lua-indent-level 2))
 
 (use-package less-css-mode
-  :ensure t)
+  :straight t)
 
 (use-package gitignore-mode
-  :ensure t)
+  :straight t)
 
 (use-package yaml-mode
-  :ensure t)
+  :straight t)
 
 (use-package nginx-mode
-  :ensure t)
+  :straight t)
 
 (use-package jsx-mode
-  :ensure t)
+  :straight t)
 
 (use-package typescript-mode
-  :ensure t
+  :straight t
   :delight "ts"
   :config
   (setq typescript-indent-level 2)
@@ -308,7 +315,7 @@
               (tide-setup))))
 
 (use-package apples-mode ;; AppleScript
-  :ensure t
+  :straight t
   :mode "\\.applescript\\'"
   :config
   ;; OS X Plist
@@ -330,7 +337,7 @@
   (jka-compr-update))
 
 (use-package web-mode
-  :ensure t
+  :straight t
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
@@ -373,48 +380,55 @@
           (call-interactively tab-key-fn)
         (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))
 
+(use-package hcl-mode
+  :straight t
+  :mode ("\\.tf\\'"))
+
+(use-package dockerfile-mode
+  :straight t)
+
+(use-package graphql-mode
+  :straight t
+  :mode ("\\.gql\\'" "\\.graphql\\'"))
+
 (use-package ledger-mode
-  :ensure t
+  :straight t
   :mode ("\\.beancount\\'" "\\.bean\\'")
   :init
   (add-hook 'ledger-mode-hook
             (lambda ()
               (bind-key "C-M-i" 'ledger-magic-tab ledger-mode-map))))
 
-(use-package hcl-mode
-  :ensure t
-  :mode ("\\.tf\\'"))
-
-(use-package dockerfile-mode
-  :ensure t)
-
-(use-package graphql-mode
-  :ensure t
-  :mode ("\\.gql\\'" "\\.graphql\\'"))
+(use-package beancount
+  :after ledger-mode
+  :straight (beancount :host github
+                       :repo "beancount/beancount"
+                       :files ("editors/emacs/*.el"))
+  :hook (ledger-mode . beancount-mode))
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
 ;; Common Lisp 开发环境
 ;; (use-package slime
-;;   :ensure t
+;;   :straight t
 ;;   :init
 ;;   (setq inferior-lisp-program (or (getenv "LISP_PROGRAM") "clisp"))
 ;;   :config
 ;;   (slime-setup '(slime-fancy slime-company)))
 ;; (use-package slime-company
-;;   :ensure t)
+;;   :straight t)
 
 ;; Ruby 开发环境
 ;; (use-package robe
-;;   :ensure t
+;;   :straight t
 ;;   :config
 ;;   (add-hook 'ruby-mode-hook 'robe-mode))
 ;; (use-package inf-ruby
-;;   :ensure t)
+;;   :straight t)
 
 ;; Clojure 开发环境
 (use-package clojure-mode
-  :ensure t
+  :straight t
   :delight
   (clojure-mode "cl")
   (clojurescript-mode "cljs")
@@ -425,13 +439,13 @@
     (mlet 'defun)))
 
 (use-package inf-clojure
-  :ensure t
+  :straight t
   :config
   (setq inf-clojure-generic-cmd "lumo -d")
   (setq inf-clojure-boot-cmd "lumo -d")
   (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
 ;; (use-package cider
-;;   :ensure t
+;;   :straight t
 ;;   :pin melpa)
 
 ;; Lisp 开发环境
@@ -440,7 +454,7 @@
          :major)
 
 (use-package parinfer
-  :ensure t
+  :straight t
   :delight '(:eval (if (eq 'paren parinfer--mode) " P:Paren" " P:Indent"))
   :config
   (setq parinfer-extensions
@@ -459,7 +473,7 @@
   (add-hook 'lisp-mode-hook #'parinfer-mode))
 
 (use-package paredit
-  :ensure t
+  :straight t
   :delight
   :config
   (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -473,7 +487,7 @@
   (add-hook 'scheme-mode-hook                      #'enable-paredit-mode))
 
 (use-package rainbow-delimiters
-  :ensure t
+  :straight t
   :delight
   :config
   (add-hook 'clojurescript-mode-hook #'rainbow-delimiters-mode)
@@ -485,7 +499,7 @@
 
 ;; 网页前端开发环境
 (use-package rainbow-mode
-  :ensure t
+  :straight t
   :delight
   :config
   (add-hook 'web-mode-hook #'rainbow-mode)
@@ -495,9 +509,9 @@
 
 (use-package web-beautify
   ;; (shell-command "npm install js-beautify -g")
-  :ensure t)
+  :straight t)
 
 (use-package tide
-  :ensure t)
+  :straight t)
 
 (provide 'plugin)
