@@ -73,6 +73,13 @@
      `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-green :weight bold))))
      `(ivy-current-match ((t :background ,zenburn-bg+1 :foreground ,zenburn-fg))))))
 
+;; 扩展 ivy
+(use-package counsel
+  :after ivy
+  :straight t
+  :bind
+  (:map counsel-find-file-map ("C-w" . ivy-backward-delete-char)))
+
 ;; 缩进辅助线
 (use-package indent-guide
   :straight t
