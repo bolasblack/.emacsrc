@@ -13,24 +13,27 @@
 
 (defun helm-projectile-switch-to-grouped-buffer ()
   (interactive)
-  (let* ((buffer-source
+  (let* ((buffer-groups
           (->> (buffer-list)
                (-group-by #'self--get-project-from-buffer)
                ((lambda (groups)
                   (let* ((nil-group-idx (--find-index (not (cl-first it)) groups))
                          (cleaned-groups (-remove-at nil-group-idx groups)))
-                    (-concat cleaned-groups (list (nth nil-group-idx groups))))))
-               (-map (lambda (group)
-                       (helm-build-sync-source (or (cl-first group)
-                                                   "Unkonwn")
-                         :candidates (cl-rest group)
-                         :candidate-transformer
-                         (lambda (buffers) (-map #'self--buffer-name buffers))
-                         :action
-                         #'switch-to-buffer))))))
+                    (-concat cleaned-groups (list (nth nil-group-idx groups))))))))
+
+         (buffer-source
+          (-map (lambda (group)
+                  (helm-build-sync-source (or (cl-first group)
+                                              "Unkonwn")
+                    :candidates (cl-rest group)
+                    :candidate-transformer
+                    (lambda (buffers) (-map #'self--buffer-name buffers))
+                    :action
+                    #'switch-to-buffer))
+                buffer-groups)))
     (helm :sources buffer-source
           :buffer "*Switch buffer*"
           :prompt "Switch to buffer: "
-          :preselect (self--buffer-name (current-buffer)))))
+          :preselect (self--buffer-name (other-buffer (current-buffer) 1)))))
 
 (provide 'helm-projectile-switch-to-grouped-buffer)
