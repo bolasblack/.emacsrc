@@ -58,7 +58,7 @@
     (dolist (config c)
       (push config popwin:special-display-config))))
 
-;; 另外一种补全方式
+;; 一种补全方式
 (use-package ivy
   :straight t
   :delight
@@ -79,6 +79,15 @@
   :straight t
   :bind
   (:map counsel-find-file-map ("C-w" . ivy-backward-delete-char)))
+
+;; 另外一种外观更丰富的补全方式
+(use-package helm
+  :straight t
+  :delight
+  :config
+  (require 'helm-config)
+  (require 'helm-projectile-switch-to-grouped-buffer)
+  (bind-key "C-x b" 'helm-projectile-switch-to-grouped-buffer))
 
 ;; 缩进辅助线
 (use-package indent-guide
