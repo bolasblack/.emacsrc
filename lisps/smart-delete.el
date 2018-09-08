@@ -1,31 +1,23 @@
 ;; -*- Emacs-Lisp -*-
 (provide 'smart-delete)
 
-;; From https://github.com/4DA/emacs-stuff/blob/20a5180eda54c76b7da3ecb1b0a640ea6c04c682/smart-kill.el
-(defun backward-delete-word-or-delim (arg &optional killp)
+;; From https://github.com/4DA/emacs-stuff/blob/3cf35ab4c1facd565d07d2c559da7f6b0c16a60b/smart-kill.el
+
+(defun backward-delete-word-or-delim ()
   "Deletes a word or delimiter/punctuation symbol backwards"
-  (interactive "*p\nP")
+  (interactive)
   (push-mark (point))
-  (if (= 0 (skip-syntax-backward "w"))
-      (block nil
-        ;; 选中多个连续的空行
-        (let ((backword-break-line-count (skip-chars-backward "\n")))
-          (unless (= 0 backword-break-line-count)
-            ;; 如果选中的空行不只一个的话，那么就需要"留下"最后一个空行
-            (unless (= -1 backword-break-line-count) (insert-char ?\n))
-            (return)))
-        ;; 选中多个连续的空白，比如空格，制表符
-        (unless (= 0 (skip-syntax-backward "-"))
-          (return))
-        (backward-delete-char-untabify arg killp)))
-  (delete-region (point) (mark))
+  (skip-syntax-backward "-_>")
+  (when (= 0 (skip-syntax-backward "w\""))
+    (skip-syntax-backward "_.'()(])[$<>"))
+  (kill-region (point) (mark))
   (pop-mark))
 
-(defun forward-delete-word-or-delim (arg &optional killflag)
+(defun forward-delete-word-or-delim ()
   "Deletes a word or delimiter/punctuation symbol forward"
-  (interactive "p\nP")
   (push-mark (point))
-  (if (= 0 (skip-syntax-forward "w"))
-      (delete-forward-char arg killflag))
-  (delete-region (point) (mark))
+  (skip-syntax-forward "-_>")
+  (when (= 0 (skip-syntax-forward "w\""))
+    (skip-syntax-forward "_.'()(])[$<>"))
+  (kill-region (point) (mark))
   (pop-mark))

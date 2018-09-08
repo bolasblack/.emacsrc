@@ -1,7 +1,13 @@
 ;; -*- Emacs-Lisp -*-
+
+(provide 'global)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; 避免使用过期的 elc 文件
+(setq load-prefer-newer t)
 
 ;; mini window 的最小高度，百分比
 (setq max-mini-window-height 0.75)
@@ -27,13 +33,12 @@
 ;; M-f/b 的时候 驼峰、连字符、下划线 都会被视为单词的分隔边界
 (global-subword-mode t)
 
-;; set the default file path
-(setq default-directory "~/")
-
 ;; change yes or no to y/n
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; 设置缩进
+;; 不用 TAB 字符来 indent ，编辑 Makefile 的时候不用担心，因为
+;; makefile-mode 会把 TAB 键设置成真正的 TAB 字符，并且加亮显示的。
 (setq-default c-basic-offset 2
               tab-width 2
               indent-tabs-mode nil)
@@ -56,19 +61,7 @@
 (setq kill-ring-max 200)
 
 ;; 把 fill-column 设为 60. 这样的文字更好读。
-(setq default-fill-column 80)
-
-;; 如果设置为 t，光标在 TAB 字符上会显示为一个大方块 :)。
-(setq x-stretch-cursor t)
-
-;; 不用 TAB 字符来indent, 这会引起很多奇怪的错误。编辑 Makefile
-;; 的时候也不用担心，因为 makefile-mode 会把 TAB 键设置成真正的
-;; TAB 字符，并且加亮显示的。
-(setq-default indent-tabs-mode nil)
-(setq default-tab-width 2)
-;(setq tab-stop-list ())
-;(loop for x downfrom 40 to 1 do
-;      (setq tab-stop-list (cons (* x 4) tab-stop-list)))
+(setq-default fill-column 80)
 
 ;; 保存前移除行末空格
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -78,7 +71,10 @@
 ;; 不在 fill 时在句号后插入两个空格
 (setq sentence-end-double-space nil)
 
-(setq ansi-color-for-comint-mode t)
+;; 如果设置为 t，光标在 TAB 字符上会显示为一个大方块 :)。
+;; (setq x-stretch-cursor t)
+
+;; (setq ansi-color-for-comint-mode t)
 
 ;; 默认倾向的编码
 (prefer-coding-system 'utf-8)
@@ -95,7 +91,51 @@
 ;; 设置进程的 I/O 操作的编码
 (modify-coding-system-alist 'process "*" 'utf-8)
 
-(setq byte-compile-dynamic nil
-      byte-compile-warnings '(not free-vars unresolved noruntime interactive-only lexical make-local))
+;; 关闭启动时的 “开机画面”
+(setq inhibit-startup-message t)
 
-(provide 'global)
+;; 没有 menubar
+(menu-bar-mode -1)
+
+;; 高亮匹配的括号
+(show-paren-mode t)
+
+;; 显示列号
+(column-number-mode t)
+
+;;语法加亮
+(global-font-lock-mode t)
+
+;; 打开就启用 text 模式
+(set-default major-mode 'text-mode)
+
+;; 在标题栏显示buffer的名字，而不是 emacs@email.***这样没用的提示。
+(setq frame-title-format "Emacs@%b")
+
+;; 把 lambda 显示成 λ
+(global-prettify-symbols-mode t)
+(add-hook 'lisp-mode-hook
+          (lambda ()
+            (push '("lambda" . ?λ) prettify-symbols-alist)))
+
+(delete-selection-mode -1)
+
+(when window-system
+  ;; 控制是否显示行号和内容容器直接的间隔
+  (set-fringe-style 0)
+
+  ;; 控制 tip 是否在 minibuffer 显示（-1 为显示）
+  (tooltip-mode t)
+
+  ;; 没有 toolbar
+  (tool-bar-mode -1)
+
+  ;; 光标不闪，不恍花眼睛
+  (blink-cursor-mode -1)
+  (transient-mark-mode t)
+
+  ;; 没有滚动条
+  (scroll-bar-mode -1)
+
+  ;; 让 Emacs 可以直接打开和显示图片。
+  (auto-image-file-mode t))

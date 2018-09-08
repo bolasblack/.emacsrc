@@ -2,6 +2,7 @@
 (require 'do-if)
 (require 'osx-clipboard)
 (require 'smart-delete)
+(require 'bind-key)
 
 (provide 'keyboard)
 

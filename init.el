@@ -1,52 +1,33 @@
 ;;; -*- lexical-binding: t -*-
 
-(defvar use-package-verbose t)
-(defvar use-package-inject-hooks t)
-
 (eval-and-compile
+  ;; set the default file path
+  (setq default-directory (expand-file-name "~/"))
   ;; .emacs.d 文件地址
-  (defconst dir-rc (expand-file-name "~/.emacsrc/"))
+  (defconst dir-rc (concat default-directory ".emacsrc/"))
   ;; Emacs 配置文件地址
   (defconst dir-conf (concat dir-rc "conf/"))
   ;; 自己写的 Lisp 脚本文件位置
   (defconst dir-lisp (concat dir-rc "lisps/"))
   ;; Snippet 文件地址
   (defconst dir-snippet (concat dir-rc "snippets/"))
+  ;; 一些其他脚本文件位置
+  (defconst dir-scripts (concat dir-rc "scripts/"))
 
   (mapc #'(lambda (path)
             (add-to-list 'load-path path))
-        (list dir-rc dir-conf dir-lisp))
+        (list dir-rc dir-conf dir-lisp)))
 
-  ;; https://github.com/raxod502/straight.el#integration-with-use-package-1
-  ;; https://github.com/raxod502/straight.el#the-recipe-format
-  (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el")))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
+(require 'prepare-use-package)
+(require 'init-theme-load-hook)
 
-  ;; https://github.com/jwiegley/use-package
-  ;; https://github.com/magnars/dash.el
-  ;; https://github.com/magnars/s.el
-  ;; https://github.com/rejeep/f.el
-  (let* ((core-packages '(use-package dash s f)))
-    (dolist (p core-packages)
-      (straight-use-package p)
-      (require p)))
-
-  ;; Load all config files
-  (require 'threads)
-  (->> (f-files dir-conf)
-       (-map #'f-base)
-       (-reject (lambda (filename) (s-starts-with? "." filename)))
-       (-map (lambda (module-name)
-               (require (intern module-name))))))
-
-(require 'straight-lock-version)
+(require 'threads)
+;; Load all config files
+(->> (f-files dir-conf)
+     (-map #'f-base)
+     (-reject (lambda (filename) (s-starts-with? "." filename)))
+     (-map (lambda (module-name)
+             (require (intern module-name)))))
 
 ;; Emacs server
 (require 'server)

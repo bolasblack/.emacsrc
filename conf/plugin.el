@@ -1,32 +1,45 @@
 ;;; -*- lexical-binding: t -*-
 
+(require 'dash)
+(require 'comment)
 (require 'smart-delete)
+(require 'straight)
+(require 'use-package)
+
+(provide 'plugin)
+
+(straight-override-recipe
+ '(undo-tree :host github
+             :repo "emacsmirror/undo-tree"))
+
+;;;;;;;;;;;;;;;;;; 扩展的开发用的库 ;;;;;;;;;;;;;;;;;;
+
+(use-package edn
+  :straight t)
 
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
-(use-package bind-key
-  :straight t)
-
-(use-package delight
-  :straight t)
+(use-package display-line-numbers
+  :if (fboundp 'global-display-line-numbers-mode)
+  :config
+  (global-display-line-numbers-mode t))
 
 (use-package linum
+  :if (not (fboundp 'global-display-line-numbers-mode))
   ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
   ;; https://github.com/kaushalmodi/.emacs.d/issues/4
   ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
   :defer 1
   :straight t
   :config
-  ;; 调整行号栏的格式
   (setq linum-format "%3d ")
-  ;; 显示行号
   (global-linum-mode t))
 
 ;; 给各个窗口编号
 (use-package window-numbering
   :straight t
   :config
-  (window-numbering-mode))
+  (window-numbering-mode t))
 
 (use-package zenburn-theme
   :straight t
@@ -61,40 +74,48 @@
 ;; 一种补全方式
 (use-package ivy
   :straight t
+  :defer 1
   :delight
+  :bind
+  (:map ivy-minibuffer-map ("C-w" . ivy-backward-kill-word))
   :config
-  (ivy-mode 1)
+  (ivy-mode t)
   (zenburn-with-color-variables
     (custom-theme-set-faces
      'zenburn
-     `(ivy-minibuffer-match-face-1 ((t (:foreground ,zenburn-green :weight bold))))
-     `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-green :weight bold))))
-     `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-green :weight bold))))
-     `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-green :weight bold))))
-     `(ivy-current-match ((t :background ,zenburn-bg+1 :foreground ,zenburn-fg))))))
+     `(ivy-current-match           ((t (                              :background ,zenburn-bg-1))))
+     `(ivy-remote                  ((t (:foreground ,zenburn-blue     :background ,zenburn-bg))))
+     `(ivy-subdir                  ((t (:foreground ,zenburn-yellow   :background ,zenburn-bg))))
+     `(ivy-minibuffer-match-face-1 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
+     `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
+     `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
+     `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold)))))))
 
 ;; 扩展 ivy
 (use-package counsel
   :after ivy
   :straight t
   :bind
-  (:map counsel-find-file-map ("C-w" . ivy-backward-delete-char)))
+  (:map counsel-find-file-map ("C-w" . ivy-backward-kill-word)))
 
 ;; 另外一种外观更丰富的补全方式
 (use-package helm
+  :commands (helm-projectile-switch-to-grouped-buffer)
   :straight t
   :delight
+  :init
+  (bind-key "C-x b" 'helm-projectile-switch-to-grouped-buffer)
   :config
   (require 'helm-config)
-  (require 'helm-projectile-switch-to-grouped-buffer)
-  (bind-key "C-x b" 'helm-projectile-switch-to-grouped-buffer))
+  (require 'helm-projectile-switch-to-grouped-buffer))
 
 ;; 缩进辅助线
 (use-package indent-guide
   :straight t
-  :defer 1
+  :defer
+  :delight
   :config
-  (indent-guide-global-mode))
+  (indent-guide-global-mode t))
 
 ;; 快速跳转到界面上某个地方
 (use-package ace-jump-mode
@@ -104,30 +125,31 @@
 
 ;; 让 Emacs 支持在 Shell 里自定义的 PATH
 (use-package exec-path-from-shell
-  :straight t)
+  :straight t
+  :if (memq window-system '(mac ns))
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
 (use-package which-key
   :straight t
   :delight
   :config
-  (which-key-mode))
+  (which-key-mode t))
 
 ;; 使用 C-p C-n 时平滑滚动，而不是直接向上/下一页跳几行
 (use-package smooth-scrolling
   :straight t
   :config
-  (smooth-scrolling-mode))
+  (smooth-scrolling-mode t))
 
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
-(straight-override-recipe
- '(undo-tree :host github
-             :repo "emacsmirror/undo-tree"))
+
 (use-package evil
-  :defer 1
   :straight t
+  :defer 1
   :config
-  (evil-mode)
+  (evil-mode t)
   :bind
   (:map evil-normal-state-map ("C-u" . scroll-down-command)))
 
@@ -138,7 +160,7 @@
 
 (use-package evil-nerd-commenter
   :straight t
-  :after general
+  :after (general evil)
   :general
   (general-nmap :prefix ","
     "ci" 'evilnc-comment-or-uncomment-lines
@@ -174,23 +196,37 @@
 (use-package flycheck
   :straight t
   :config
-  (global-flycheck-mode)
+  (global-flycheck-mode t)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
               (when (s-starts-with? dir-conf (buffer-file-name))
                 (make-local-variable 'flycheck-emacs-lisp-load-path)
-                (setq flycheck-emacs-lisp-load-path t))))
+                (setq flycheck-emacs-lisp-load-path 'inherit))))
   (add-hook 'coffee-mode-hook
             (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
+(use-package flycheck-popup-tip
+  :if (not (display-graphic-p))
+  :after flycheck
+  :straight t
+  :config
+  (flycheck-popup-tip-mode t))
+(use-package flycheck-pos-tip
+  :if (display-graphic-p)
+  :after flycheck
+  :straight t
+  :config
+  (flycheck-pos-tip-mode t))
 
 ;; 自动标点配对（不只是标点配对）
 (use-package smartparens
   :straight t
   :delight
   :config
-  (use-package smartparens-config)
-  (smartparens-global-mode))
+  (smartparens-global-mode t))
+
+(use-package smartparens-config
+  :after smartparens)
 
 (use-package undo-tree
   :straight t
@@ -217,16 +253,10 @@
   :straight t
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
-  (yas-global-mode 1))
+  (yas-global-mode t))
 
 (use-package drag-stuff
   :straight t)
-
-;; 光标移动到一个单词后会高亮所有相同的单词
-(use-package auto-highlight-symbol
-  :straight t
-  :config
-  (auto-highlight-symbol-mode))
 
 ;; Sublime Text 的多光标模式
 ;; (use-package multiple-cursors
@@ -246,6 +276,14 @@
 (use-package aggressive-indent
   :straight t)
 
+;; EditorConfig
+(use-package editorconfig
+  :straight t
+  :delight
+  :ensure-system-package editorconfig
+  :config
+  (editorconfig-mode t))
+
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
 ;; CtrlP
@@ -256,8 +294,11 @@
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :config
   (setq projectile-completion-system 'ivy)
-  (projectile-mode)
-  (add-to-list 'projectile-project-root-files-bottom-up "package.json")
+  (projectile-mode t)
+  (setq projectile-project-root-files-bottom-up
+        (-union projectile-project-root-files-bottom-up
+                '("package.json"
+                  "shadow-cljs.edn")))
   :bind
   (:map evil-normal-state-map
         ("C-p" . projectile-find-file)))
@@ -283,56 +324,73 @@
   (custom-set-variables
    '(git-gutter:unchanged-sign " ")))
 
+(use-package magit
+  :straight t
+  :defer)
+
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package coffee-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package jade-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package sass-mode
   :straight t
-  :mode "\\.styl\\'")
+  :defer
+  :mode ("\\.styl\\'"))
 
 (use-package lua-mode
   :straight t
-  :mode "\\.lua\\'"
+  :defer
+  :mode ("\\.lua\\'")
   :interpreter "lua"
   :config
   (setq lua-indent-level 2))
 
 (use-package less-css-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package gitignore-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package yaml-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package nginx-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package jsx-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package typescript-mode
   :straight t
+  :defer
   :delight "ts"
-  :config
-  (setq typescript-indent-level 2)
+  :init
   (add-hook 'typescript-mode-hook
             (lambda ()
               (yas-activate-extra-mode 'js-mode)
-              (tide-setup))))
+              (tide-setup)))
+  :config
+  (setq typescript-indent-level 2))
 
 (use-package apples-mode ;; AppleScript
   :straight t
-  :mode "\\.applescript\\'"
+  :defer
+  :mode ("\\.applescript\\'")
   :config
   ;; OS X Plist
 
@@ -354,6 +412,7 @@
 
 (use-package web-mode
   :straight t
+  :defer
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :config
@@ -367,10 +426,7 @@
               (let ((file-ext (file-name-extension buffer-file-name)))
                 (when (or (string-equal "tsx" file-ext)
                           (string-equal "ts" file-ext))
-                  (tide-setup)))
-              (let ((backends (make-local-variable 'company-backends)))
-                (mapcar (lambda (c) (add-to-list 'backends c))
-                        '(company-nxml company-css company-web-html)))))
+                  (tide-setup)))))
   (defadvice indent-for-tab-command (around web-mode-setup-yas-extra-mode activate)
     (interactive)
     (if (and (equal major-mode 'web-mode)
@@ -398,29 +454,54 @@
 
 (use-package hcl-mode
   :straight t
+  :defer
   :mode ("\\.tf\\'"))
 
 (use-package dockerfile-mode
-  :straight t)
+  :straight t
+  :defer)
 
 (use-package graphql-mode
   :straight t
+  :defer
   :mode ("\\.gql\\'" "\\.graphql\\'"))
 
 (use-package ledger-mode
   :straight t
+  :defer
   :mode ("\\.beancount\\'" "\\.bean\\'")
   :init
   (add-hook 'ledger-mode-hook
             (lambda ()
               (bind-key "C-M-i" 'ledger-magic-tab ledger-mode-map))))
 
-(use-package beancount
-  :after ledger-mode
+(use-package beancount-mode
   :straight (beancount :host github
                        :repo "beancount/beancount"
                        :files ("editors/emacs/*.el"))
+  :defer
+  :after ledger-mode
   :hook (ledger-mode . beancount-mode))
+
+(use-package sh-script
+  :defer
+  :mode ("\\.zsh$" "zshrc$")
+  :config
+  (setq sh-basic-offset 2))
+
+(use-package css-mode
+  :defer
+  :config
+  (setq css-indent-offset 2))
+
+(use-package js
+  :defer
+  :config
+  (setq js-indent-level 2))
+
+(use-package nxml-mode
+  :defer
+  :mode ("\\.aiml$"))
 
 ;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
 
@@ -445,89 +526,139 @@
 ;; Clojure 开发环境
 (use-package clojure-mode
   :straight t
+  :defer
   :delight
   (clojure-mode "cl")
   (clojurescript-mode "cljs")
   :config
+  (add-hook 'clojure-mode-hook
+            (lambda () (setq-local prettify-symbols-alist nil)))
   (define-clojure-indent
+    (fn-go 'defun)
     (go-let 'defun)
+    (go-try-let 'defun)
     (alet 'defun)
-    (mlet 'defun)))
+    (mlet 'defun)
+    (describe 'defun)
+    (it 'defun)
+    (cond-converge 'defun)))
 
 (use-package inf-clojure
   :straight t
+  :defer
+  :hook (clojure-mode)
   :config
   (setq inf-clojure-generic-cmd "lumo -d")
-  (setq inf-clojure-boot-cmd "lumo -d")
-  (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
-;; (use-package cider
-;;   :straight t
-;;   :pin melpa)
+  (setq inf-clojure-boot-cmd "lumo -d"))
 
-;; Lisp 开发环境
-(delight 'emacs-lisp-mode
-         '("Elisp" (lexical-binding ":Lex" ":Dyn"))
-         :major)
-
-(use-package parinfer
+(comment use-package cider
   :straight t
-  :delight '(:eval (if (eq 'paren parinfer--mode) " P:Paren" " P:Indent"))
+  :defer)
+
+(use-package elisp-mode
+  :delight
+  (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
+  :mode ("Cask"))
+
+(use-package paredit
+  :commands enable-paredit-mode
+  :straight t
+  :defer
+  :delight
+  :hook ((clojurescript-mode
+          clojure-mode
+          eval-expression-minibuffer-setup
+          emacs-lisp-mode
+          ielm-mode
+          lisp-mode
+          lisp-interaction-mode
+          scheme-mode) . enable-paredit-mode))
+
+(use-package selected
+  :straight t
+  :delight
+  :no-require t)
+(use-package parinfer-smart
+  :straight
+  (parinfer-smart :host github
+                  :branch "smart"
+                  :repo "DogLooksGood/parinfer-mode"
+                  :files ("*.el"))
+  :delight
+  (parinfer-mode (:eval (if (boundp 'parinfer--mode)
+                            (progn
+                              ((eq 'paren parinfer--mode) " P:Paren")
+                              ((eq 'indent parinfer--mode) " P:Indent")
+                              (t " P:Unknown"))
+                          " parinfer")))
+  :bind
+  (:map paredit-mode-map
+        (";" . self-insert-command))
+  :hook ((clojure-mode
+          emacs-lisp-mode
+          common-lisp-mode
+          scheme-mode
+          lisp-mode) . parinfer-mode)
   :config
-  (setq parinfer-extensions
-        '(defaults       ; should be included.
+  (setq parinfer-partial-process t
+        parinfer-extensions
+        '(defaults        ; should be included.
            pretty-parens  ; different paren styles for different modes.
            evil           ; If you use Evil.
-           lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
            paredit        ; Introduce some paredit commands.
            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
            smart-yank))   ; Yank behavior depend on mode.
-  (add-hook 'parinfer-mode-enable-hook #'parinfer--switch-to-paren-mode)
-  (add-hook 'clojure-mode-hook #'parinfer-mode)
-  (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-  (add-hook 'common-lisp-mode-hook #'parinfer-mode)
-  (add-hook 'scheme-mode-hook #'parinfer-mode)
-  (add-hook 'lisp-mode-hook #'parinfer-mode))
-
-(use-package paredit
-  :straight t
-  :delight
-  :config
-  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  (add-hook 'clojurescript-mode-hook               #'enable-paredit-mode)
-  (add-hook 'clojure-mode-hook                     #'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook                  #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook                        #'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook                        #'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook            #'enable-paredit-mode)
-  (add-hook 'scheme-mode-hook                      #'enable-paredit-mode))
+  (defun parinfer--lint ()
+    (unless (string-prefix-p "*temp*" (string-trim (buffer-name)))
+      (let ((err nil))
+        (when (save-excursion (goto-char (point-min))
+                              (search-forward "\t" (point-max) t))
+          (setq err "Can't enable parinfer due to inconsistent indentation."))
+        (let ((buffer-text (buffer-substring-no-properties (point-min) (point-max)))
+              (mm major-mode))
+          (with-temp-buffer
+            (insert buffer-text)
+            (funcall mm)
+            (parinfer--initial-states)
+            (condition-case ex
+                (parinfer--process-buffer)
+              (error
+               (setq err (concat "Can't enable parinfer due to error: " (cadr ex)))))
+            (unless (or (string-equal (buffer-substring-no-properties (point-min) (point-max))
+                                      buffer-text)
+                        (yes-or-no-p "Enable parinfer will modify current buffer content, continue?"))
+              (setq err "Can't enable parinfer due to buffer will be changed."))))
+        err))))
 
 (use-package rainbow-delimiters
   :straight t
+  :defer
   :delight
-  :config
-  (add-hook 'clojurescript-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'common-lisp-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode))
+  :hook ((clojurescript-mode
+          clojure-mode
+          emacs-lisp-mode
+          common-lisp-mode
+          scheme-mode
+          lisp-mode) . rainbow-delimiters-mode))
 
 ;; 网页前端开发环境
 (use-package rainbow-mode
   :straight t
+  :defer
   :delight
-  :config
-  (add-hook 'web-mode-hook #'rainbow-mode)
-  (add-hook 'css-mode-hook #'rainbow-mode)
-  (add-hook 'sass-mode-hook #'rainbow-mode)
-  (add-hook 'scss-mode-hook #'rainbow-mode))
+  :hook (web-mode
+         css-mode
+         sass-mode
+         scss-mode))
 
 (use-package web-beautify
-  ;; (shell-command "npm install js-beautify -g")
-  :straight t)
+  :straight t
+  :defer
+  :ensure-system-package (js-beautify . "yarn global add js-beautify"))
 
 (use-package tide
-  :straight t)
-
-(provide 'plugin)
+  :straight t
+  :defer
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)))

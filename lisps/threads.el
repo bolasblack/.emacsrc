@@ -9,7 +9,7 @@
   (let* ((x x)
          (forms forms))
     (while forms
-      (let* ((form (el-first forms))
+      (let* ((form (cl-first forms))
              (threaded (if (listp form)
                            `(,(cl-first form) ,x ,@(cl-rest form))
                          (list form x))))
