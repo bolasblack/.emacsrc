@@ -1,29 +1,37 @@
 ;;; -*- lexical-binding: t -*-
 
-(require 'dash)
 (require 'comment)
 (require 'smart-delete)
 (require 'straight)
 (require 'use-package)
 
-(provide 'plugin)
+(provide-me)
 
 (straight-override-recipe
  '(undo-tree :host github
              :repo "emacsmirror/undo-tree"))
 
-;;;;;;;;;;;;;;;;;; 扩展的开发用的库 ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;; 扩展库 ;;;;;;;;;;;;;;;;;;
 
 (use-package edn
   :straight t)
 
+(use-package dash
+  :straight t)
+
+(use-package s
+  :straight t)
+
+(use-package f
+  :straight t)
+
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
+;; 显示行号
 (use-package display-line-numbers
   :if (fboundp 'global-display-line-numbers-mode)
   :config
   (global-display-line-numbers-mode t))
-
 (use-package linum
   :if (not (fboundp 'global-display-line-numbers-mode))
   ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
@@ -41,6 +49,7 @@
   :config
   (window-numbering-mode t))
 
+;; 主题
 (use-package zenburn-theme
   :straight t
   :config
@@ -49,7 +58,8 @@
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
 (use-package help-fns+
-  :straight t)
+  :straight t
+  :defer)
 
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
@@ -204,7 +214,7 @@
                 (make-local-variable 'flycheck-emacs-lisp-load-path)
                 (setq flycheck-emacs-lisp-load-path 'inherit))))
   (add-hook 'coffee-mode-hook
-            (lambda () (setq flycheck-coffeelintrc (concat dir-rc "flycheck.conf/coffee.json")))))
+            (lambda () (setq flycheck-coffeelintrc (concat dir-flycheck "coffee.json")))))
 (use-package flycheck-popup-tip
   :if (not (display-graphic-p))
   :after flycheck
@@ -251,6 +261,7 @@
 ;; snippet 引擎
 (use-package yasnippet
   :straight t
+  :defer
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode t))

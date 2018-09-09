@@ -1,10 +1,12 @@
 ;; -*- Emacs-Lisp -*-
 
-(provide 'global)
+(provide-me)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 系统设置
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq default-directory (expand-file-name "~/"))
 
 ;; 避免使用过期的 elc 文件
 (setq load-prefer-newer t)

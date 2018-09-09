@@ -1,4 +1,8 @@
+;;; -*- lexical-binding: t -*-
+
 (require 'cl-lib)
+
+(provide 'threads)
 
 ;; https://github.com/clojure/clojure/blob/131c5f71b8d65169d233b03d39f7582a1a5d926e/src/clj/clojure/core.clj#L1669
 (defmacro -> (x &rest forms)
@@ -33,5 +37,3 @@
         (setq x threaded
               forms (cl-rest forms))))
     x))
-
-(provide 'threads)

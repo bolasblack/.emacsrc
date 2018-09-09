@@ -1,35 +1,27 @@
 ;;; -*- lexical-binding: t -*-
 
 (eval-and-compile
+  (defconst dir-init (file-name-directory (or load-file-name "")))
   ;; set the default file path
-  (setq default-directory (expand-file-name "~/"))
-  ;; .emacs.d 文件地址
-  (defconst dir-rc (concat default-directory ".emacsrc/"))
+  (defconst dir-rc dir-init)
   ;; Emacs 配置文件地址
   (defconst dir-conf (concat dir-rc "conf/"))
-  ;; 自己写的 Lisp 脚本文件位置
+  ;; 自己写的 Lisp 库文件位置
   (defconst dir-lisp (concat dir-rc "lisps/"))
   ;; Snippet 文件地址
   (defconst dir-snippet (concat dir-rc "snippets/"))
-  ;; 一些其他脚本文件位置
-  (defconst dir-scripts (concat dir-rc "scripts/"))
+  ;; flycheck 配置文件地址
+  (defconst dir-flycheck (concat dir-rc "flycheck.conf/"))
 
-  (mapc #'(lambda (path)
-            (add-to-list 'load-path path))
-        (list dir-rc dir-conf dir-lisp)))
+  (add-to-list 'load-path dir-rc)
+  (add-to-list 'load-path dir-conf)
+  (add-to-list 'load-path dir-lisp))
 
-(require 'prepare-use-package)
+(require 'init-straight)
+(require 'init-load-relative)
 (require 'init-theme-load-hook)
-
-(require 'threads)
-;; Load all config files
-(->> (f-files dir-conf)
-     (-map #'f-base)
-     (-reject (lambda (filename) (s-starts-with? "." filename)))
-     (-map (lambda (module-name)
-             (require (intern module-name)))))
-
-;; Emacs server
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(require 'init-use-package)
+(require 'init-deps)
+(require 'init-keyboard)
+(require 'init-settings)
+(require 'init-emacs-server)

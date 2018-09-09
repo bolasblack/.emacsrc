@@ -1,4 +1,4 @@
-;; -*- Emacs-Lisp -*-
+;;; -*- mode: emacs-lisp-mode; lexical-binding: t -*-
 
 ;; From http://stackoverflow.com/questions/22849281/on-emacs-for-osx-how-to-keep-kill-ring-and-clipboard-separate#answer-24249229
 (defun osx-clipboard-kill-ring-save ()
@@ -16,7 +16,7 @@
 (defun osx-clipboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
-  (pasteboard-copy)
+  (osx-clipboard-kill-ring-save)
   (delete-region (region-beginning) (region-end)))
 
 (provide 'osx-clipboard)

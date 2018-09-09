@@ -4,7 +4,7 @@
 (require 'smart-delete)
 (require 'bind-key)
 
-(provide 'keyboard)
+(provide-me)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 按键设置

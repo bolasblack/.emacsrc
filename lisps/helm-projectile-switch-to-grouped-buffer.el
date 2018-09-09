@@ -1,7 +1,11 @@
+;;; -*- lexical-binding: t -*-
+
 (require 's)
 (require 'dash)
 (require 'helm)
 (require 'projectile)
+
+(provide 'helm-projectile-switch-to-grouped-buffer)
 
 (defun self--buffer-name (buffer)
   (s-trim (buffer-name buffer)))
@@ -35,5 +39,3 @@
           :buffer "*Switch buffer*"
           :prompt "Switch to buffer: "
           :preselect (self--buffer-name (other-buffer (current-buffer) 1)))))
-
-(provide 'helm-projectile-switch-to-grouped-buffer)
