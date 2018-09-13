@@ -262,6 +262,7 @@
 (use-package yasnippet
   :straight t
   :defer
+  :commands (yas-activate-extra-mode yas-deactivate-extra-mode)
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode t))
@@ -572,7 +573,7 @@
   :mode ("Cask"))
 
 (use-package paredit
-  :commands enable-paredit-mode
+  :commands (enable-paredit-mode)
   :straight t
   :defer
   :delight

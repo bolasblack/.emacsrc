@@ -27,11 +27,6 @@
 ;; 设置 C-x C-g 为 goto-line
 (bind-key "C-x C-g" 'goto-line)
 
-;; Super-c/v/x 对应系统的复制粘贴剪切
-(bind-key "S-c" 'osx-clipboard-kill-ring-save)
-(bind-key "S-v" 'osx-clipboard-yank)
-(bind-key "S-x" 'osx-clipboard-cut)
-
 ;; Undo 和 Redo
 (bind-key "C-/" 'undo)
 (bind-key "M-/" 'undo-tree-redo)
