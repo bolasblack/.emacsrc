@@ -39,8 +39,9 @@
   ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
   :defer 1
   :straight t
+  :custom
+  (linum-format "%3d " "行号右边多一个空格")
   :config
-  (setq linum-format "%3d ")
   (global-linum-mode t))
 
 ;; 给各个窗口编号
@@ -64,12 +65,11 @@
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
   :straight t
+  :custom
+  (popwin:popup-window-height 15)
   :config
   (popwin-mode t)
-
   ;; Config: https://github.com/m2ym/popwin-el#special-display-config
-  (setq popwin:popup-window-height 15)
-
   (let ((c '(;; Emacs
              ("*Procces List*" :height 20)
              ("*Warnings*" :height 20)
@@ -183,9 +183,10 @@
 (use-package evil-easymotion
   :straight t
   :after evil
+  :custom
+  (avy-style 'at-full)
+  (avy-background t)
   :config
-  (setq avy-style 'at-full)
-  (setq avy-background t)
   (define-key evil-motion-state-map (kbd ",") nil)
   (evilem-default-keybindings (kbd ",,")))
 
@@ -247,16 +248,15 @@
 (use-package company
   :straight t
   :delight
+  :custom
+  (company-minimum-prefix-length 1 "自动提示的最少字数")
+  (company-backends '((company-files
+                       company-keywords
+                       company-dabbrev-code
+                       company-dabbrev
+                       company-yasnippet)))
   :config
-  (global-company-mode t)
-  ;; 自动提示的最少字数
-  (setq company-minimum-prefix-length 1)
-  (setq company-backends
-        '((company-files
-           company-keywords
-           company-dabbrev-code
-           company-dabbrev
-           company-yasnippet))))
+  (global-company-mode t))
 
 ;; snippet 引擎
 (use-package yasnippet
@@ -304,16 +304,17 @@
   :after evil
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
+  :bind
+  (:map evil-normal-state-map
+        ("C-p" . projectile-find-file))
+  :custom
+  (projectile-completion-system 'ivy)
   :config
-  (setq projectile-completion-system 'ivy)
-  (projectile-mode t)
   (setq projectile-project-root-files-bottom-up
         (-union projectile-project-root-files-bottom-up
                 '("package.json"
                   "shadow-cljs.edn")))
-  :bind
-  (:map evil-normal-state-map
-        ("C-p" . projectile-find-file)))
+  (projectile-mode t))
 
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter
@@ -364,8 +365,8 @@
   :defer
   :mode ("\\.lua\\'")
   :interpreter "lua"
-  :config
-  (setq lua-indent-level 2))
+  :custom
+  (lua-indent-level 2))
 
 (use-package less-css-mode
   :straight t
@@ -396,8 +397,8 @@
             (lambda ()
               (yas-activate-extra-mode 'js-mode)
               (tide-setup)))
-  :config
-  (setq typescript-indent-level 2))
+  :custom
+  (typescript-indent-level 2))
 
 (use-package apples-mode ;; AppleScript
   :straight t
@@ -427,12 +428,13 @@
   :defer
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
+  :custom
+  (web-mode-css-indent-offset 2)
+  (web-mode-sql-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-attr-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
   :config
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-sql-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-attr-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2)
   (add-hook 'web-mode-hook
             (lambda ()
               (let ((file-ext (file-name-extension buffer-file-name)))
@@ -493,23 +495,24 @@
                        :files ("editors/emacs/*.el"))
   :defer
   :after ledger-mode
-  :hook (ledger-mode . beancount-mode))
+  :hook ledger-mode)
 
 (use-package sh-script
   :defer
-  :mode ("\\.zsh$" "zshrc$")
-  :config
-  (setq sh-basic-offset 2))
+  :mode
+  ("zshrc$" . shell-script-mode)
+  :custom
+  (sh-basic-offset 2))
 
 (use-package css-mode
   :defer
-  :config
-  (setq css-indent-offset 2))
+  :custom
+  (css-indent-offset 2))
 
 (use-package js
   :defer
-  :config
-  (setq js-indent-level 2))
+  :custom
+  (js-indent-level 2))
 
 (use-package nxml-mode
   :defer
@@ -558,10 +561,10 @@
 (use-package inf-clojure
   :straight t
   :defer
-  :hook (clojure-mode)
-  :config
-  (setq inf-clojure-generic-cmd "lumo -d")
-  (setq inf-clojure-boot-cmd "lumo -d"))
+  :hook clojure-mode
+  :custom
+  (inf-clojure-generic-cmd "lumo -d")
+  (inf-clojure-boot-cmd "lumo -d"))
 
 (comment use-package cider
   :straight t
@@ -570,7 +573,8 @@
 (use-package elisp-mode
   :delight
   (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
-  :mode ("Cask"))
+  :mode
+  ("Cask"))
 
 (use-package paredit
   :commands (enable-paredit-mode)
