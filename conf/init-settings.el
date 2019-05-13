@@ -65,9 +65,6 @@
 ;; 把 fill-column 设为 60. 这样的文字更好读。
 (setq-default fill-column 80)
 
-;; 保存前移除行末空格
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 ;; 设置 sentence-end 可以识别中文标点
 (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
 ;; 不在 fill 时在句号后插入两个空格

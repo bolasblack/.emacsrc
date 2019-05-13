@@ -18,7 +18,8 @@
   (add-to-list 'load-path dir-lisp))
 
 (require 'init-straight)
-(require 'init-load-relative)
+(eval-when-compile
+  (require 'init-load-relative))
 (require 'init-theme-load-hook)
 (require 'init-use-package)
 (require 'init-deps)

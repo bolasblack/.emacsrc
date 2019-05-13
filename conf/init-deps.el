@@ -153,6 +153,8 @@
   :config
   (smooth-scrolling-mode t))
 
+(load-relative "./deps/lsp")
+
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 
 (use-package evil
@@ -208,6 +210,7 @@
   :straight t
   :config
   (global-flycheck-mode t)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
@@ -261,8 +264,11 @@
 ;; snippet 引擎
 (use-package yasnippet
   :straight t
-  :defer
-  :commands (yas-activate-extra-mode yas-deactivate-extra-mode)
+  :commands (yas-global-mode
+             yas-minor-mode
+             yas-expand-snippet
+             yas-activate-extra-mode
+             yas-deactivate-extra-mode)
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode t))
@@ -311,9 +317,10 @@
   (projectile-completion-system 'ivy)
   :config
   (setq projectile-project-root-files-bottom-up
-        (-union projectile-project-root-files-bottom-up
-                '("package.json"
-                  "shadow-cljs.edn")))
+        (-union
+         '("package.json"
+           "shadow-cljs.edn")
+         projectile-project-root-files-bottom-up))
   (projectile-mode t))
 
 ;; 显示对比上次 commit 做了些什么修改
@@ -341,6 +348,15 @@
   :straight t
   :defer)
 
+(comment
+ (use-package vc-hooks
+   :defer
+   :config
+   (setcdr (assq 'vc-mode mode-line-format)
+           '((:eval (->> (replace-regexp-in-string "^ Git:" " " vc-mode)
+                         (replace-regexp-in-string "^ Git-" " " vc-mode)
+                         (replace-regexp-in-string "feature/" "f/")))))))
+
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
@@ -352,6 +368,14 @@
   :defer)
 
 (use-package jade-mode
+  :straight t
+  :defer)
+
+(use-package css-mode
+  :defer
+  :mode ("\\.css\\'" "\\.wxss\\'"))
+
+(use-package less-css-mode
   :straight t
   :defer)
 
@@ -368,10 +392,6 @@
   :custom
   (lua-indent-level 2))
 
-(use-package less-css-mode
-  :straight t
-  :defer)
-
 (use-package gitignore-mode
   :straight t
   :defer)
@@ -383,22 +403,6 @@
 (use-package nginx-mode
   :straight t
   :defer)
-
-(use-package jsx-mode
-  :straight t
-  :defer)
-
-(use-package typescript-mode
-  :straight t
-  :defer
-  :delight "ts"
-  :init
-  (add-hook 'typescript-mode-hook
-            (lambda ()
-              (yas-activate-extra-mode 'js-mode)
-              (tide-setup)))
-  :custom
-  (typescript-indent-level 2))
 
 (use-package apples-mode ;; AppleScript
   :straight t
@@ -426,7 +430,7 @@
 (use-package web-mode
   :straight t
   :defer
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'")
+  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'" "\\.wxml\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :custom
   (web-mode-css-indent-offset 2)
@@ -435,12 +439,6 @@
   (web-mode-attr-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   :config
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (let ((file-ext (file-name-extension buffer-file-name)))
-                (when (or (string-equal "tsx" file-ext)
-                          (string-equal "ts" file-ext))
-                  (tide-setup)))))
   (defadvice indent-for-tab-command (around web-mode-setup-yas-extra-mode activate)
     (interactive)
     (if (and (equal major-mode 'web-mode)
@@ -509,16 +507,11 @@
   :custom
   (css-indent-offset 2))
 
-(use-package js
-  :defer
-  :custom
-  (js-indent-level 2))
-
 (use-package nxml-mode
   :defer
   :mode ("\\.aiml$"))
 
-;;;;;;;;;;;;;;;;;;;; 开发环境 ;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;; Common Lisp ;;;;;;;;;;;;;;;;;;;;
 
 ;; Common Lisp 开发环境
 ;; (use-package slime
@@ -530,6 +523,8 @@
 ;; (use-package slime-company
 ;;   :straight t)
 
+;;;;;;;;;;;;;;;;;;;; Ruby ;;;;;;;;;;;;;;;;;;;;
+
 ;; Ruby 开发环境
 ;; (use-package robe
 ;;   :straight t
@@ -537,6 +532,8 @@
 ;;   (add-hook 'ruby-mode-hook 'robe-mode))
 ;; (use-package inf-ruby
 ;;   :straight t)
+
+;;;;;;;;;;;;;;;;;;;; Clojure ;;;;;;;;;;;;;;;;;;;;
 
 ;; Clojure 开发环境
 (use-package clojure-mode
@@ -558,23 +555,27 @@
     (it 'defun)
     (cond-converge 'defun)))
 
-(use-package inf-clojure
-  :straight t
-  :defer
-  :hook clojure-mode
-  :custom
-  (inf-clojure-generic-cmd "lumo -d")
-  (inf-clojure-boot-cmd "lumo -d"))
+;; (use-package inf-clojure
+;;   :straight t
+;;   :defer
+;;   :hook clojure-mode
+;;   :custom
+;;   (inf-clojure-generic-cmd "lumo -d")
+;;   (inf-clojure-boot-cmd "lumo -d"))
 
-(comment use-package cider
+(use-package cider
   :straight t
   :defer)
+
+;;;;;;;;;;;;;;;;;;;; Emacs Lisp ;;;;;;;;;;;;;;;;;;;;
 
 (use-package elisp-mode
   :delight
   (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
   :mode
   ("Cask"))
+
+;;;;;;;;;;;;;;;;;;;; Lisp ;;;;;;;;;;;;;;;;;;;;
 
 (use-package paredit
   :commands (enable-paredit-mode)
@@ -583,6 +584,7 @@
   :delight
   :hook ((clojurescript-mode
           clojure-mode
+          clojurescript-mode
           eval-expression-minibuffer-setup
           emacs-lisp-mode
           ielm-mode
@@ -611,6 +613,7 @@
   (:map paredit-mode-map
         (";" . self-insert-command))
   :hook ((clojure-mode
+          clojurescript-mode
           emacs-lisp-mode
           common-lisp-mode
           scheme-mode
@@ -624,7 +627,7 @@
            paredit        ; Introduce some paredit commands.
            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
            smart-yank))   ; Yank behavior depend on mode.
-  (defun parinfer--lint ()
+  (defun parinfer---lint ()
     (unless (string-prefix-p "*temp*" (string-trim (buffer-name)))
       (let ((err nil))
         (when (save-excursion (goto-char (point-min))
@@ -657,7 +660,8 @@
           scheme-mode
           lisp-mode) . rainbow-delimiters-mode))
 
-;; 网页前端开发环境
+;;;;;;;;;;;;;;;;;;;; 前端 ;;;;;;;;;;;;;;;;;;;;
+
 (use-package rainbow-mode
   :straight t
   :defer
@@ -667,14 +671,5 @@
          sass-mode
          scss-mode))
 
-(use-package web-beautify
-  :straight t
-  :defer
-  :ensure-system-package (js-beautify . "yarn global add js-beautify"))
-
-(use-package tide
-  :straight t
-  :defer
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)))
+(load-relative "./deps/javascript-support")
+(load-relative "./deps/json-support")

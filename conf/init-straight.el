@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 (provide 'init-straight)
 
 (eval-and-compile
