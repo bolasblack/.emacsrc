@@ -17,12 +17,24 @@
   (add-to-list 'load-path dir-conf)
   (add-to-list 'load-path dir-lisp))
 
-(require 'init-straight)
-(eval-when-compile
-  (require 'init-load-relative))
-(require 'init-theme-load-hook)
-(require 'init-use-package)
-(require 'init-deps)
-(require 'init-keyboard)
-(require 'init-settings)
-(require 'init-emacs-server)
+(let (
+      ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
+      (gc-cons-threshold most-positive-fixnum)
+      ;; 清空避免加载远程文件的时候分析文件。
+      (file-name-handler-alist nil))
+
+  (require 'package)
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.org/packages/") t)
+
+  (require 'benchmark-init)
+  (add-hook 'after-init-hook 'benchmark-init/deactivate)
+
+  (require 'init-straight)
+  (require 'init-load-relative)
+  (require 'init-theme-load-hook)
+  (require 'init-use-package)
+  (require 'init-deps)
+  (require 'init-keyboard)
+  (require 'init-settings)
+  (require 'init-emacs-server))

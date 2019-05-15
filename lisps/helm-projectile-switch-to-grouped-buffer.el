@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 's)
+(require 'f)
 (require 'dash)
 (require 'helm)
 (require 'projectile)

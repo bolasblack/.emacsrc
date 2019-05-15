@@ -1,7 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 
+(require 's)
+(require 'load-relative)
 (require 'ensure-system-package)
-(load-relative "./lsp")
+
+(provide-me)
 
 (let* ((lsp-json-lsp-activate-p
         (lambda (file-name &rest args)

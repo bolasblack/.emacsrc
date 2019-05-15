@@ -11,8 +11,7 @@
 
 (use-package lsp-ui
   :straight t
-  :requires (lsp-ui lsp-ui-flycheck)
-  :after (flycheck)
+  :after (lsp-mode flycheck)
   :commands (lsp-ui-mode))
 
 (use-package company-lsp

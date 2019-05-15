@@ -14,16 +14,20 @@
 ;;;;;;;;;;;;;;;;;; 扩展库 ;;;;;;;;;;;;;;;;;;
 
 (use-package edn
-  :straight t)
+  :straight t
+  :defer t)
 
 (use-package dash
-  :straight t)
+  :straight t
+  :defer t)
 
 (use-package s
-  :straight t)
+  :straight t
+  :defer t)
 
 (use-package f
-  :straight t)
+  :straight t
+  :defer t)
 
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
@@ -34,10 +38,6 @@
   (global-display-line-numbers-mode t))
 (use-package linum
   :if (not (fboundp 'global-display-line-numbers-mode))
-  ;; 如果一开始就激活 global-linum-mode 会导致 emacs --daemon 崩溃，无法正常启动
-  ;; https://github.com/kaushalmodi/.emacs.d/issues/4
-  ;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2010-07/msg00518.html
-  :defer 1
   :straight t
   :custom
   (linum-format "%3d " "行号右边多一个空格")
@@ -59,8 +59,7 @@
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
 (use-package help-fns+
-  :straight t
-  :defer)
+  :straight t)
 
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
@@ -84,7 +83,7 @@
 ;; 一种补全方式
 (use-package ivy
   :straight t
-  :defer 1
+  :defer .1
   :delight
   :bind
   (:map ivy-minibuffer-map ("C-w" . ivy-backward-kill-word))
@@ -103,15 +102,16 @@
 
 ;; 扩展 ivy
 (use-package counsel
-  :after ivy
   :straight t
+  :after (ivy)
   :bind
   (:map counsel-find-file-map ("C-w" . ivy-backward-kill-word)))
 
 ;; 另外一种外观更丰富的补全方式
 (use-package helm
-  :commands (helm-projectile-switch-to-grouped-buffer)
   :straight t
+  :defer t
+  :commands (helm-projectile-switch-to-grouped-buffer)
   :delight
   :init
   (bind-key "C-x b" 'helm-projectile-switch-to-grouped-buffer)
@@ -122,7 +122,6 @@
 ;; 缩进辅助线
 (use-package indent-guide
   :straight t
-  :defer
   :delight
   :config
   (indent-guide-global-mode t))
@@ -130,6 +129,7 @@
 ;; 快速跳转到界面上某个地方
 (use-package ace-jump-mode
   :straight t
+  :defer t
   :bind
   ("C-c C-c" . ace-jump-word-mode))
 
@@ -153,17 +153,15 @@
   :config
   (smooth-scrolling-mode t))
 
-(load-relative "./deps/lsp")
-
 ;;;;;;;;;;;;;;;;;;;; Evil ;;;;;;;;;;;;;;;;;;;;
 
 (use-package evil
   :straight t
-  :defer 1
-  :config
-  (evil-mode t)
+  :defer .1
   :bind
-  (:map evil-normal-state-map ("C-u" . scroll-down-command)))
+  (:map evil-normal-state-map ("C-u" . scroll-down-command))
+  :config
+  (evil-mode 1))
 
 (use-package general
   :straight t
@@ -184,7 +182,7 @@
 
 (use-package evil-easymotion
   :straight t
-  :after evil
+  :after (evil)
   :custom
   (avy-style 'at-full)
   (avy-background t)
@@ -194,7 +192,7 @@
 
 (use-package origami
   :straight t
-  :after evil
+  :after (evil)
   :bind
   (:map evil-normal-state-map ("zo" . origami-open-node))
   (:map evil-normal-state-map ("zO" . origami-open-node-recursively))
@@ -208,6 +206,7 @@
 ;; 语法检查
 (use-package flycheck
   :straight t
+  :defer t
   :config
   (global-flycheck-mode t)
   (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -220,21 +219,22 @@
   (add-hook 'coffee-mode-hook
             (lambda () (setq flycheck-coffeelintrc (concat dir-flycheck "coffee.json")))))
 (use-package flycheck-popup-tip
+  :straight t
   :if (not (display-graphic-p))
   :after flycheck
-  :straight t
   :config
   (flycheck-popup-tip-mode t))
 (use-package flycheck-pos-tip
+  :straight t
   :if (display-graphic-p)
   :after flycheck
-  :straight t
   :config
   (flycheck-pos-tip-mode t))
 
 ;; 自动标点配对（不只是标点配对）
 (use-package smartparens
   :straight t
+  :after t
   :delight
   :config
   (smartparens-global-mode t))
@@ -244,6 +244,7 @@
 
 (use-package undo-tree
   :straight t
+  :defer t
   :delight " undotree"
   :config
   (global-undo-tree-mode t))
@@ -274,7 +275,8 @@
   (yas-global-mode t))
 
 (use-package drag-stuff
-  :straight t)
+  :straight t
+  :defer t)
 
 ;; Sublime Text 的多光标模式
 ;; (use-package multiple-cursors
@@ -288,15 +290,18 @@
 
 ;; 便捷选区
 (use-package expand-region
-  :straight t)
+  :straight t
+  :defer t)
 
 ;; 自动调整缩进
 (use-package aggressive-indent
-  :straight t)
+  :straight t
+  :defer t)
 
 ;; EditorConfig
 (use-package editorconfig
   :straight t
+  :defer t
   :delight
   :ensure-system-package editorconfig
   :config
@@ -307,7 +312,7 @@
 ;; CtrlP
 (use-package projectile
   :straight t
-  :after evil
+  :after (evil)
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :bind
@@ -316,6 +321,7 @@
   :custom
   (projectile-completion-system 'ivy)
   :config
+  (require 'dash)
   (setq projectile-project-root-files-bottom-up
         (-union
          '("package.json"
@@ -326,6 +332,7 @@
 ;; 显示对比上次 commit 做了些什么修改
 (use-package git-gutter
   :straight t
+  :defer t
   :delight
   :config
   (global-git-gutter-mode t)
@@ -346,11 +353,11 @@
 
 (use-package magit
   :straight t
-  :defer)
+  :defer t)
 
 (comment
  (use-package vc-hooks
-   :defer
+   :defer t
    :config
    (setcdr (assq 'vc-mode mode-line-format)
            '((:eval (->> (replace-regexp-in-string "^ Git:" " " vc-mode)
@@ -361,32 +368,38 @@
 
 (use-package markdown-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("\\.md\\'" "\\.markdown\\'"))
 
 (use-package coffee-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("\\.coffee\\'"))
 
 (use-package jade-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("\\.jade\\'"))
 
 (use-package css-mode
-  :defer
-  :mode ("\\.css\\'" "\\.wxss\\'"))
+  :defer t
+  :mode ("\\.css\\'" "\\.wxss\\'")
+  :custom
+  (css-indent-offset 2))
 
 (use-package less-css-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("\\.less\\'"))
 
 (use-package sass-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.styl\\'"))
 
 (use-package lua-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.lua\\'")
   :interpreter "lua"
   :custom
@@ -394,19 +407,21 @@
 
 (use-package gitignore-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("gitignore$"))
 
 (use-package yaml-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("\\.yml\\'" "\\.yaml\\'"))
 
 (use-package nginx-mode
   :straight t
-  :defer)
+  :defer t)
 
 (use-package apples-mode ;; AppleScript
   :straight t
-  :defer
+  :defer t
   :mode ("\\.applescript\\'")
   :config
   ;; OS X Plist
@@ -429,7 +444,7 @@
 
 (use-package web-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'" "\\.wxml\\'")
   :interpreter ("node" "nodejs" "gjs" "rhino")
   :custom
@@ -466,21 +481,22 @@
 
 (use-package hcl-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.tf\\'"))
 
 (use-package dockerfile-mode
   :straight t
-  :defer)
+  :defer t
+  :mode ("dockerfile$"))
 
 (use-package graphql-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.gql\\'" "\\.graphql\\'"))
 
 (use-package ledger-mode
   :straight t
-  :defer
+  :defer t
   :mode ("\\.beancount\\'" "\\.bean\\'")
   :init
   (add-hook 'ledger-mode-hook
@@ -491,24 +507,18 @@
   :straight (beancount :host github
                        :repo "beancount/beancount"
                        :files ("editors/emacs/*.el"))
-  :defer
   :after ledger-mode
   :hook ledger-mode)
 
 (use-package sh-script
-  :defer
+  :defer t
   :mode
   ("zshrc$" . shell-script-mode)
   :custom
   (sh-basic-offset 2))
 
-(use-package css-mode
-  :defer
-  :custom
-  (css-indent-offset 2))
-
 (use-package nxml-mode
-  :defer
+  :defer t
   :mode ("\\.aiml$"))
 
 ;;;;;;;;;;;;;;;;;;;; Common Lisp ;;;;;;;;;;;;;;;;;;;;
@@ -538,7 +548,8 @@
 ;; Clojure 开发环境
 (use-package clojure-mode
   :straight t
-  :defer
+  :defer t
+  :mode ("\\.clj\\'" "\\.cljs\\'")
   :delight
   (clojure-mode "cl")
   (clojurescript-mode "cljs")
@@ -557,7 +568,7 @@
 
 ;; (use-package inf-clojure
 ;;   :straight t
-;;   :defer
+;;   :defer t
 ;;   :hook clojure-mode
 ;;   :custom
 ;;   (inf-clojure-generic-cmd "lumo -d")
@@ -565,11 +576,12 @@
 
 (use-package cider
   :straight t
-  :defer)
+  :after (clojure-mode))
 
 ;;;;;;;;;;;;;;;;;;;; Emacs Lisp ;;;;;;;;;;;;;;;;;;;;
 
 (use-package elisp-mode
+  :defer t
   :delight
   (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
   :mode
@@ -578,9 +590,9 @@
 ;;;;;;;;;;;;;;;;;;;; Lisp ;;;;;;;;;;;;;;;;;;;;
 
 (use-package paredit
-  :commands (enable-paredit-mode)
   :straight t
-  :defer
+  :defer t
+  :commands (enable-paredit-mode)
   :delight
   :hook ((clojurescript-mode
           clojure-mode
@@ -594,6 +606,7 @@
 
 (use-package selected
   :straight t
+  :defer t
   :delight
   :no-require t)
 (use-package parinfer-smart
@@ -602,6 +615,8 @@
                   :branch "smart"
                   :repo "DogLooksGood/parinfer-mode"
                   :files ("*.el"))
+  :defer t
+  :after (company)
   :delight
   (parinfer-mode (:eval (if (boundp 'parinfer--mode)
                             (progn
@@ -651,7 +666,7 @@
 
 (use-package rainbow-delimiters
   :straight t
-  :defer
+  :defer t
   :delight
   :hook ((clojurescript-mode
           clojure-mode
@@ -660,16 +675,6 @@
           scheme-mode
           lisp-mode) . rainbow-delimiters-mode))
 
-;;;;;;;;;;;;;;;;;;;; 前端 ;;;;;;;;;;;;;;;;;;;;
-
-(use-package rainbow-mode
-  :straight t
-  :defer
-  :delight
-  :hook (web-mode
-         css-mode
-         sass-mode
-         scss-mode))
-
-(load-relative "./deps/javascript-support")
+(load-relative "./deps/lsp")
+(load-relative "./deps/frontend-support")
 (load-relative "./deps/json-support")

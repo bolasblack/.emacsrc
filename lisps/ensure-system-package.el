@@ -1,6 +1,7 @@
 ;; inspired by github:waymondo/use-package-ensure-system-package
 
 (require 'system-packages)
+(require 'comment)
 
 (provide 'ensure-system-package)
 
@@ -47,11 +48,12 @@ Usage:
              (async-shell-command ,(cdr cons))))
       pkginfos))))
 
-(macroexpand-1
- '(ensure-system-package rg bat))
-(macroexpand-1
- '(ensure-system-package
-   (rubocop     . "gem install rubocop")
-   (ruby-lint   . "gem install ruby-lint")
-   (ripper-tags . "gem install ripper-tags")
-   (pry         . "gem install pry")))
+(comment
+ (macroexpand-1
+  '(ensure-system-package rg bat))
+ (macroexpand-1
+  '(ensure-system-package
+    (rubocop     . "gem install rubocop")
+    (ruby-lint   . "gem install ruby-lint")
+    (ripper-tags . "gem install ripper-tags")
+    (pry         . "gem install pry"))))

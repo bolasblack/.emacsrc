@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'init-straight)
-(require 'init-melpa)
 
 (provide-me)
 
@@ -14,18 +13,14 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package system-packages
-  :straight t
-  :defer)
-
 (use-package use-package-ensure-system-package
   :straight t
-  :defer)
+  :defer t)
 
 (use-package bind-key
   :straight t
-  :defer)
+  :defer t)
 
 (use-package delight
   :straight t
-  :defer)
+  :defer t)
