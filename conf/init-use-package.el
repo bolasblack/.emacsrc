@@ -13,6 +13,8 @@
 (eval-when-compile
   (require 'use-package))
 
+(require 'use-package-evil-bind)
+
 (use-package use-package-ensure-system-package
   :straight t
   :defer t)

@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'comment)
-(require 'smart-delete)
 (require 'straight)
 (require 'use-package)
 
@@ -86,9 +85,24 @@
   :defer .1
   :delight
   :bind
-  (:map ivy-minibuffer-map ("C-w" . ivy-backward-kill-word))
+  (:map ivy-minibuffer-map
+        ("C-w" . ivy-backward-kill-word)
+        ("TAB" . self--ivy-tab))
+  :custom
+  (ivy-use-selectable-prompt t)
   :config
   (ivy-mode t)
+  ;; https://honmaple.me/articles/2018/06/%E8%87%AA%E5%AE%9A%E4%B9%89helm%E5%BC%8F%E7%9A%84ivy.html#org-46223305
+  (defun self--ivy-tab ()
+    (interactive)
+    (let ((dir ivy--directory))
+      (ivy-partial)
+      (when (string= dir ivy--directory)
+        (ivy-insert-current)
+        (when (and (eq (ivy-state-collection ivy-last) #'read-file-name-internal)
+                   (setq dir (ivy-expand-file-if-directory (ivy-state-current ivy-last))))
+          (ivy--cd dir)
+          (setq this-command 'ivy-cd)))))
   (zenburn-with-color-variables
     (custom-theme-set-faces
      'zenburn
@@ -111,10 +125,9 @@
 (use-package helm
   :straight t
   :defer t
-  :commands (helm-projectile-switch-to-grouped-buffer)
   :delight
-  :init
-  (bind-key "C-x b" 'helm-projectile-switch-to-grouped-buffer)
+  :bind
+  ("C-x b" . helm-projectile-switch-to-grouped-buffer)
   :config
   (require 'helm-config)
   (require 'helm-projectile-switch-to-grouped-buffer))
@@ -316,8 +329,7 @@
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :bind
-  (:map evil-normal-state-map
-        ("C-p" . projectile-find-file))
+  (:map evil-normal-state-map ("C-p" . projectile-find-file))
   :custom
   (projectile-completion-system 'ivy)
   :config
@@ -364,38 +376,31 @@
                          (replace-regexp-in-string "^ Git-" " " vc-mode)
                          (replace-regexp-in-string "feature/" "f/")))))))
 
+(use-package color-rg
+  :straight (color-rg :host github
+                      :repo "manateelazycat/color-rg"
+                      :files ("color-rg.el"))
+  :defer t
+  :commands (color-rg-search-input
+             color-rg-search-symbol
+             color-rg-search-symbol-with-type
+             color-rg-search-input-in-current-file
+             color-rg-search-symbol-in-current-file
+             color-rg-search-project
+             color-rg-search-input-in-project
+             color-rg-search-symbol-in-project
+             color-rg-search-project-rails
+             color-rg-search-project-rails-with-type)
+  :ensure-system-package (rg)
+  :bind
+  (:map evil-normal-state-map ("RET" . color-rg-open-file)))
+
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
   :straight t
   :defer t
   :mode ("\\.md\\'" "\\.markdown\\'"))
-
-(use-package coffee-mode
-  :straight t
-  :defer t
-  :mode ("\\.coffee\\'"))
-
-(use-package jade-mode
-  :straight t
-  :defer t
-  :mode ("\\.jade\\'"))
-
-(use-package css-mode
-  :defer t
-  :mode ("\\.css\\'" "\\.wxss\\'")
-  :custom
-  (css-indent-offset 2))
-
-(use-package less-css-mode
-  :straight t
-  :defer t
-  :mode ("\\.less\\'"))
-
-(use-package sass-mode
-  :straight t
-  :defer t
-  :mode ("\\.styl\\'"))
 
 (use-package lua-mode
   :straight t
@@ -442,43 +447,6 @@
   ;;It is necessary to perform an update!
   (jka-compr-update))
 
-(use-package web-mode
-  :straight t
-  :defer t
-  :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.erb\\'" "\\.html\\'" "\\.vue\\'" "\\.wxml\\'")
-  :interpreter ("node" "nodejs" "gjs" "rhino")
-  :custom
-  (web-mode-css-indent-offset 2)
-  (web-mode-sql-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  (web-mode-attr-indent-offset 2)
-  (web-mode-markup-indent-offset 2)
-  :config
-  (defadvice indent-for-tab-command (around web-mode-setup-yas-extra-mode activate)
-    (interactive)
-    (if (and (equal major-mode 'web-mode)
-             (called-interactively-p 'interactive))
-        (let ((curr-lang (web-mode-language-at-pos))
-              (lang-mode-map '(("css"        . css-mode)
-                               ("html"       . html-mode)
-                               ("javascript" . js-mode)
-                               ("jsx"        . js-mode))))
-          (-reduce-from (lambda (matched-mode pair)
-                          (if (string= curr-lang (car pair))
-                              (progn
-                                (yas-activate-extra-mode (cdr pair))
-                                (cdr pair))
-                            (progn
-                              (if (not (equal (cdr pair) matched-mode))
-                                  (yas-deactivate-extra-mode (cdr pair)))
-                              matched-mode)))
-                        nil lang-mode-map)))
-    (let ((tab-key-fn (key-binding (kbd "<tab>"))))
-      (if (and tab-key-fn
-               (not (equal #'indent-for-tab-command tab-key-fn)))
-          (call-interactively tab-key-fn)
-        (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))
-
 (use-package hcl-mode
   :straight t
   :defer t
@@ -488,11 +456,6 @@
   :straight t
   :defer t
   :mode ("dockerfile$"))
-
-(use-package graphql-mode
-  :straight t
-  :defer t
-  :mode ("\\.gql\\'" "\\.graphql\\'"))
 
 (use-package ledger-mode
   :straight t
