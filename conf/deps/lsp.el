@@ -20,3 +20,10 @@
   :commands (company-lsp)
   :config
   (push 'company-lsp company-backends))
+
+(comment
+ (use-package lsp-origami
+   :straight t
+   :after (origami)
+   :hook
+   ((origami . lsp-origami-mode))))
