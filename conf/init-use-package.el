@@ -26,3 +26,7 @@
 (use-package delight
   :straight t
   :defer t)
+
+(use-package auto-minor-mode
+  :straight t
+  :defer t)

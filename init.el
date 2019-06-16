@@ -27,13 +27,15 @@
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
 
-  (require 'benchmark-init)
-  (add-hook 'after-init-hook 'benchmark-init/deactivate)
+  (when (featurep 'benchmark-init)
+    (require 'benchmark-init)
+    (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
   (require 'init-straight)
   (require 'init-load-relative)
   (require 'init-theme-load-hook)
   (require 'init-use-package)
+  (require 'init-baselib)
   (require 'init-deps)
   (require 'init-keyboard)
   (require 'init-settings)

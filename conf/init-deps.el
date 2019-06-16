@@ -3,38 +3,13 @@
 (require 'comment)
 (require 'straight)
 (require 'use-package)
+(require 'mode-helpers)
 
 (provide-me)
 
 (straight-override-recipe
  '(undo-tree :host github
              :repo "emacsmirror/undo-tree"))
-
-;;;;;;;;;;;;;;;;;; 扩展库 ;;;;;;;;;;;;;;;;;;
-
-(use-package edn
-  :straight t
-  :defer t)
-
-;; https://github.com/magnars/dash.el
-(use-package dash
-  :straight t
-  :defer t)
-
-;; https://github.com/magnars/s.el
-(use-package s
-  :straight t
-  :defer t)
-
-;; https://github.com/rejeep/f.el
-(use-package f
-  :straight t
-  :defer t)
-
-;; https://github.com/Wilfred/ht.el
-(use-package ht
-  :straight t
-  :defer t)
 
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
@@ -206,7 +181,7 @@
   :if (display-graphic-p)
   :after (flycheck-pos-tip)
   :config
-  (if posframe-workable-p
+  (if (posframe-workable-p)
       (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
     (flycheck-pos-tip-mode t)))
 
@@ -233,13 +208,48 @@
   :delight
   :custom
   (company-minimum-prefix-length 1 "自动提示的最少字数")
-  (company-backends '((company-files
-                       company-keywords
-                       company-dabbrev-code
-                       company-dabbrev
-                       company-yasnippet)))
+  (company-backends '(company-yasnippet
+                      company-files
+                      company-capf
+                      company-keywords
+                      company-dabbrev-code
+                      company-dabbrev))
+  (evil-complete-previous-func 'c4:company-complete-previous-func)
+  (evil-complete-next-func 'c4:company-complete-next-func)
+  :bind (:map company-active-map
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous))
+  :commands (global-company-mode
+             company-complete
+             company-select-next
+             company-select-previous)
+  :init
+  (defun c4:company-complete-previous-func (&rest args)
+    (company-complete))
+  (defun c4:company-complete-next-func (&rest args)
+    (company-complete))
   :config
   (global-company-mode t))
+
+(use-package company-quickhelp
+  :straight t
+  :delight
+  :after (company)
+  :if (display-graphic-p)
+  :config
+  (company-quickhelp-mode))
+
+(use-package company-echo-doc
+  :after (company)
+  :if (not (display-graphic-p))
+  :custom
+  (company-echo-doc-disable 'c4:company-echo-doc-disable)
+  :init
+  (defun c4:company-echo-doc-disable ()
+    (-intersection (activated-minor-modes)
+                   '(tide-mode)))
+  :config
+  (company-echo-doc-mode))
 
 ;; snippet 引擎
 (use-package yasnippet
@@ -515,6 +525,12 @@
   (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
   :mode
   ("Cask"))
+
+(use-package pretty-eval-last-sexp
+  :commands
+  (pretty-eval-last-sexp)
+  :bind
+  ("C-x C-e" . pretty-eval-last-sexp))
 
 ;;;;;;;;;;;;;;;;;;;; Lisp ;;;;;;;;;;;;;;;;;;;;
 
