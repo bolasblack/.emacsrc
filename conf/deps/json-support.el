@@ -1,39 +1,34 @@
-;;; -*- lexical-binding: t -*-
-
 (require 's)
 (require 'load-relative)
 (require 'ensure-system-package)
 
 (provide-me)
 
-(let* ((lsp-json-lsp-activate-p
-        (lambda (file-name &rest args)
-          (and (stringp file-name)
-               (s-ends-with? ".json" file-name))))
+(defvar c4:json-support/json-lsp-client-registered nil)
 
-       (json-lsp-client-registered
-        nil)
+(defun c4:json-support/lsp-json-lsp-activate-p (file-name &rest args)
+  (and (stringp file-name)
+       (s-ends-with? ".json" file-name)))
 
-       (register-json-lsp-client
-        (lambda ()
-          (unless json-lsp-client-registered
-            (setq json-lsp-client-registered t)
+(defun c4:json-support/register-json-lsp-client ()
+  (unless c4:json-support/json-lsp-client-registered
+    (setq c4:json-support/json-lsp-client-registered t)
 
-            (ensure-system-package
-             (vscode-json-languageserver . "yarn global add vscode-json-languageserver"))
+    (ensure-system-package
+     (vscode-json-languageserver . "yarn global add vscode-json-languageserver"))
 
-            (require 'lsp-mode)
+    (require 'lsp-mode)
 
-            (lsp-register-client
-             (make-lsp-client :new-connection (lsp-stdio-connection
-                                               (lambda () '("vscode-json-languageserver" "--stdio")))
-                              :priority -1
-                              :activation-fn lsp-json-lsp-activate-p
-                              :server-id 'json-ls))))))
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection
+                                       (lambda () '("vscode-json-languageserver" "--stdio")))
+                      :priority -1
+                      :activation-fn 'c4:json-support/lsp-json-lsp-activate-p
+                      :server-id 'json-ls))))
 
-  (add-hook
-   'find-file-hook
-   #'(lambda ()
-       (when (funcall lsp-json-lsp-activate-p buffer-file-name)
-         (funcall register-json-lsp-client)
-         (lsp)))))
+(defun c4:json-support/find-file-hook ()
+  (when (c4:json-support/lsp-json-lsp-activate-p buffer-file-name)
+    (c4:json-support/register-json-lsp-client)
+    (lsp)))
+
+(add-hook 'find-file-hook 'c4:json-support/find-file-hook)

@@ -8,10 +8,10 @@
 
 (provide 'helm-projectile-switch-to-grouped-buffer)
 
-(defun self--buffer-name (buffer)
+(defun c4:buffer-name (buffer)
   (s-trim (buffer-name buffer)))
 
-(defun self--get-project-from-buffer (buffer)
+(defun c4:get-project-from-buffer (buffer)
   (-find (lambda (proj)
            (projectile-project-buffer-p buffer (f-long proj)))
          projectile-known-projects))
@@ -20,7 +20,7 @@
   (interactive)
   (let* ((buffer-groups
           (->> (buffer-list)
-               (-group-by #'self--get-project-from-buffer)
+               (-group-by #'c4:get-project-from-buffer)
                ((lambda (groups)
                   (let* ((nil-group-idx (--find-index (not (cl-first it)) groups))
                          (cleaned-groups (-remove-at nil-group-idx groups)))
@@ -32,11 +32,11 @@
                                               "Unkonwn")
                     :candidates (cl-rest group)
                     :candidate-transformer
-                    (lambda (buffers) (-map #'self--buffer-name buffers))
+                    (lambda (buffers) (-map #'c4:buffer-name buffers))
                     :action
                     #'switch-to-buffer))
                 buffer-groups)))
     (helm :sources buffer-source
           :buffer "*Switch buffer*"
           :prompt "Switch to buffer: "
-          :preselect (self--buffer-name (other-buffer (current-buffer) 1)))))
+          :preselect (c4:buffer-name (other-buffer (current-buffer) 1)))))

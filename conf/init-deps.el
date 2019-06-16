@@ -95,13 +95,13 @@
   :bind
   (:map ivy-minibuffer-map
         ("C-w" . ivy-backward-kill-word)
-        ("TAB" . self--ivy-tab))
+        ("TAB" . c4:ivy-tab))
   :custom
   (ivy-use-selectable-prompt t)
   :config
   (ivy-mode t)
   ;; https://honmaple.me/articles/2018/06/%E8%87%AA%E5%AE%9A%E4%B9%89helm%E5%BC%8F%E7%9A%84ivy.html#org-46223305
-  (defun self--ivy-tab ()
+  (defun c4:ivy-tab ()
     (interactive)
     (let ((dir ivy--directory))
       (ivy-partial)

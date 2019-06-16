@@ -47,34 +47,36 @@
   :defer t
   :mode ("\\.gql\\'" "\\.graphql\\'"))
 
-(let ((adviced nil))
-  (defun web-mode-advice-indent-for-tab-command ()
-    (unless adviced
-      (setq adviced t)
-      (defadvice indent-for-tab-command (around web-mode-setup-yas-extra-mode activate)
-        (interactive)
-        (if (and (equal major-mode 'web-mode)
-                 (called-interactively-p 'interactive))
-            (let ((curr-lang (web-mode-language-at-pos))
-                  (lang-mode-map '(("css"        . css-mode)
-                                   ("html"       . html-mode)
-                                   ("javascript" . js-mode)
-                                   ("jsx"        . js-mode))))
-              (-reduce-from (lambda (matched-mode pair)
-                              (if (string= curr-lang (car pair))
-                                  (progn
-                                    (yas-activate-extra-mode (cdr pair))
-                                    (cdr pair))
-                                (progn
-                                  (if (not (equal (cdr pair) matched-mode))
-                                      (yas-deactivate-extra-mode (cdr pair)))
-                                  matched-mode)))
-                            nil lang-mode-map)))
-        (let ((tab-key-fn (key-binding (kbd "<tab>"))))
-          (if (and tab-key-fn
-                   (not (equal #'indent-for-tab-command tab-key-fn)))
-              (call-interactively tab-key-fn)
-            (call-interactively (ad-get-orig-definition 'indent-for-tab-command))))))))
+(defvar yas-activate-extra-mode-in-web-mode
+  '(("css"        . css-mode)
+    ("html"       . html-mode)
+    ("javascript" . js-mode)
+    ("jsx"        . js-mode)))
+
+(defun c4:web-mode-indent-for-tab-command-advice (origin-fn &rest args)
+  (interactive)
+  (when (and (equal major-mode 'web-mode)
+             (called-interactively-p 'interactive))
+    (let* ((curr-lang (web-mode-language-at-pos)))
+      (-reduce-from (lambda (matched-modes pair)
+                      (let ((lang-name (car pair))
+                            (mode (cdr pair)))
+                        (if (string= curr-lang lang-name)
+                            (progn
+                              (yas-activate-extra-mode mode)
+                              (cons mode matched-modes))
+                          (progn
+                            (unless (-contains? matched-modes mode)
+                              (yas-deactivate-extra-mode mode))
+                            matched-modes))))
+                    nil yas-activate-extra-mode-in-web-mode)))
+  (let ((tab-key-fn (key-binding (kbd "<tab>"))))
+    ;; if yas expandable in current point, then <tab> bound function will
+    ;; become `yas-expand', otherwise it is still `indent-for-tab-command'
+    (if (and tab-key-fn
+             (not (equal #'indent-for-tab-command tab-key-fn)))
+        (call-interactively tab-key-fn)
+      (call-interactively origin-fn))))
 
 (use-package web-mode
   :straight t
@@ -98,7 +100,9 @@
   (web-mode-attr-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   :config
-  (web-mode-advice-indent-for-tab-command))
+  (advice-add 'indent-for-tab-command
+              :around
+              'c4:web-mode-indent-for-tab-command-advice))
 
 (use-package js
   :defer t
