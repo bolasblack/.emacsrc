@@ -206,23 +206,20 @@
 (use-package company
   :straight t
   :delight
+  :defer .1
   :custom
   (company-minimum-prefix-length 1 "自动提示的最少字数")
-  (company-backends '(company-yasnippet
-                      company-files
-                      company-capf
-                      company-keywords
-                      company-dabbrev-code
-                      company-dabbrev))
+  (company-backends '((company-yasnippet
+                       company-files
+                       company-capf
+                       company-keywords
+                       company-dabbrev-code
+                       company-dabbrev)))
   (evil-complete-previous-func 'c4:company-complete-previous-func)
   (evil-complete-next-func 'c4:company-complete-next-func)
   :bind (:map company-active-map
          ("C-n" . company-select-next)
          ("C-p" . company-select-previous))
-  :commands (global-company-mode
-             company-complete
-             company-select-next
-             company-select-previous)
   :init
   (defun c4:company-complete-previous-func (&rest args)
     (company-complete))
@@ -247,7 +244,8 @@
   :init
   (defun c4:company-echo-doc-disable ()
     (-intersection (activated-minor-modes)
-                   '(tide-mode)))
+                   '(tide-mode
+                     emacs-lisp-mode)))
   :config
   (company-echo-doc-mode))
 

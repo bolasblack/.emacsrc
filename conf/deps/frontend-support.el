@@ -136,19 +136,21 @@
 
 (use-package tide
   :straight t
-  :defer t
+  :after (typescript-mode company flycheck)
   :commands (tide-setup tide-hl-identifier-mode)
-  :hook
-  ((typescript-mode . (lambda ()
-                        (yas-activate-extra-mode 'js-mode)
-                        (tide-setup)
-                        (tide-hl-identifier-mode)))
-   (web-mode . (lambda ()
-                 (let ((file-ext (file-name-extension buffer-file-name)))
-                   (when (or (string-equal "tsx" file-ext)
-                             (string-equal "ts" file-ext))
-                     (tide-setup)
-                     (tide-hl-identifier-mode))))))
+  :preface
+  (defun c4:tide-mode/typescript-mode-hook ()
+    (yas-activate-extra-mode 'js-mode)
+    (tide-setup)
+    (tide-hl-identifier-mode))
+  (add-hook 'typescript-mode 'c4:tide-mode/typescript-mode-hook)
+  (defun c4:tide-mode/web-mode-hook ()
+    (let ((file-ext (file-name-extension buffer-file-name)))
+      (when (or (string-equal "tsx" file-ext)
+                (string-equal "ts" file-ext))
+        (tide-setup)
+        (tide-hl-identifier-mode))))
+  (add-hook 'web-mode-hook 'c4:tide-mode/web-mode-hook)
   :config
   (defun tide-load-tsconfig (path loaded-paths)
     (when (member path loaded-paths)
