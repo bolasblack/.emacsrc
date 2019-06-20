@@ -35,7 +35,7 @@
   "Show documentation in echo area for `company-mode'"
   :group 'company)
 
-(defcustom company-echo-doc-max-lines nil
+(defcustom company-echo-doc-max-lines 4
   "When not NIL, limits the number of lines in the echo area."
   :type '(choice (integer :tag "Max lines to show in echo area")
                  (const :tag "Don't limit the number of lines shown" nil))
