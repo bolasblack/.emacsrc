@@ -623,3 +623,4 @@
 (load-relative "./deps/lsp")
 (load-relative "./deps/frontend-support")
 (load-relative "./deps/json-support")
+(load-relative "./deps/org-mode")
