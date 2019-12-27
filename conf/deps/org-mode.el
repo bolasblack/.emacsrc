@@ -16,3 +16,9 @@
     (bind-key "zc" 'outline-hide-subtree evil-normal-state-local-map)
     (bind-key "ze" 'outline-show-entry evil-normal-state-local-map)
     (bind-key "zE" 'outline-hide-entry evil-normal-state-local-map)))
+
+(use-package poly-org
+  :straight t
+  :after (polymode org)
+  :mode
+  ("\\.org\\'" . poly-org-mode))

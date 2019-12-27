@@ -41,7 +41,7 @@
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
 (use-package help-fns+
-  :straight t)
+  :straight help-fns-plus)
 
 ;; 自动调整提示窗口的位置的尺寸
 (use-package popwin
@@ -61,48 +61,6 @@
              ("^\*helm.*\*$" :regexp t))))
     (dolist (config c)
       (push config popwin:special-display-config))))
-
-;; 一种补全方式
-(use-package ivy
-  :straight t
-  :defer .1
-  :delight
-  :bind
-  (:map ivy-minibuffer-map
-        ("C-w" . ivy-backward-kill-word)
-        ("TAB" . c4:ivy-tab))
-  :custom
-  (ivy-use-selectable-prompt t)
-  :config
-  (ivy-mode t)
-  ;; https://honmaple.me/articles/2018/06/%E8%87%AA%E5%AE%9A%E4%B9%89helm%E5%BC%8F%E7%9A%84ivy.html#org-46223305
-  (defun c4:ivy-tab ()
-    (interactive)
-    (let ((dir ivy--directory))
-      (ivy-partial)
-      (when (string= dir ivy--directory)
-        (ivy-insert-current)
-        (when (and (eq (ivy-state-collection ivy-last) #'read-file-name-internal)
-                   (setq dir (ivy-expand-file-if-directory (ivy-state-current ivy-last))))
-          (ivy--cd dir)
-          (setq this-command 'ivy-cd)))))
-  (zenburn-with-color-variables
-    (custom-theme-set-faces
-     'zenburn
-     `(ivy-current-match           ((t (                              :background ,zenburn-bg-1))))
-     `(ivy-remote                  ((t (:foreground ,zenburn-blue     :background ,zenburn-bg))))
-     `(ivy-subdir                  ((t (:foreground ,zenburn-yellow   :background ,zenburn-bg))))
-     `(ivy-minibuffer-match-face-1 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold)))))))
-
-;; 扩展 ivy
-(use-package counsel
-  :straight t
-  :after (ivy)
-  :bind
-  (:map counsel-find-file-map ("C-w" . ivy-backward-kill-word)))
 
 ;; 另外一种外观更丰富的补全方式
 (use-package helm
@@ -149,15 +107,36 @@
   :config
   (smooth-scrolling-mode t))
 
+;; 一个文件里支持多个主模式
+(use-package polymode
+  :straight t)
+
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
 
 ;; 语法检查
+(comment defun c4:flycheck-add-eslint/web-mode-hook ()
+         (let ((file-ext (file-name-extension buffer-file-name)))
+           (when (or
+                  (string-equal "tsx" file-ext)
+                  (string-equal "ts" file-ext))
+             (cl-pushnew 'typescript-tide flycheck--automatically-enabled-checkers))
+           (when (or
+                  (string-equal "jsx" file-ext)
+                  (string-equal "js" file-ext))
+             (cl-pushnew 'javascript-eslint flycheck--automatically-enabled-checkers))))
+(comment defun c4:flycheck-resize-id-column ()
+         (setq flycheck-error-list-format
+               `[("File" 6)
+                 ("Line" 5 flycheck-error-list-entry-< :right-align t)
+                 ("Col" 3 nil :right-align t)
+                 ("Level" 8 flycheck-error-list-entry-level-<)
+                 ("ID" 50 t)
+                 (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
 (use-package flycheck
   :straight t
   :defer t
   :config
   (global-flycheck-mode t)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
   (add-hook 'emacs-lisp-mode-hook
             (lambda ()
               (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
@@ -165,7 +144,10 @@
                 (make-local-variable 'flycheck-emacs-lisp-load-path)
                 (setq flycheck-emacs-lisp-load-path 'inherit))))
   (add-hook 'coffee-mode-hook
-            (lambda () (setq flycheck-coffeelintrc (concat dir-flycheck "coffee.json")))))
+            (lambda () (setq flycheck-coffeelintrc (concat dir-flycheck "coffee.json"))))
+  (comment add-hook 'web-mode-hook 'c4:flycheck-add-eslint/web-mode-hook)
+  (comment add-hook 'flycheck-error-list-mode-hook 'c4:flycheck-resize-id-column)
+  (comment (flycheck-add-mode 'javascript-eslint 'web-mode)))
 (use-package flycheck-popup-tip
   :straight t
   :if (not (display-graphic-p))
@@ -203,51 +185,9 @@
   :config
   (global-undo-tree-mode t))
 
-(use-package company
-  :straight t
-  :delight
-  :defer .1
-  :custom
-  (company-minimum-prefix-length 1 "自动提示的最少字数")
-  (company-backends '((company-yasnippet
-                       company-files
-                       company-capf
-                       company-keywords
-                       company-dabbrev-code
-                       company-dabbrev)))
-  (evil-complete-previous-func 'c4:company-complete-previous-func)
-  (evil-complete-next-func 'c4:company-complete-next-func)
-  :bind (:map company-active-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
-  :init
-  (defun c4:company-complete-previous-func (&rest args)
-    (company-complete))
-  (defun c4:company-complete-next-func (&rest args)
-    (company-complete))
-  :config
-  (global-company-mode t))
+(load-relative "./deps/company")
 
-(use-package company-quickhelp
-  :straight t
-  :delight
-  :after (company)
-  :if (display-graphic-p)
-  :config
-  (company-quickhelp-mode))
-
-(use-package company-echo-doc
-  :after (company)
-  :if (not (display-graphic-p))
-  :custom
-  (company-echo-doc-disable 'c4:company-echo-doc-disable)
-  :init
-  (defun c4:company-echo-doc-disable ()
-    (-intersection (activated-minor-modes)
-                   '(tide-mode
-                     emacs-lisp-mode)))
-  :config
-  (company-echo-doc-mode))
+(load-relative "./deps/ivy")
 
 ;; snippet 引擎
 (use-package yasnippet
@@ -300,6 +240,7 @@
 (use-package projectile
   :straight t
   :after (evil)
+  :ensure-system-package (fd)
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :bind
@@ -371,10 +312,13 @@
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
-(use-package markdown-mode
+(use-package poly-markdown
   :straight t
-  :defer t
-  :mode ("\\.md\\'" "\\.markdown\\'"))
+  :after (polymode)
+  :mode
+  ("\\.md\\'" . poly-markdown-mode)
+  ("\\.mdx\\'" . poly-markdown-mode)
+  ("\\.markdown\\'" . poly-markdown-mode))
 
 (use-package lua-mode
   :straight t
@@ -395,6 +339,10 @@
   :mode ("\\.yml\\'" "\\.yaml\\'"))
 
 (use-package nginx-mode
+  :straight t
+  :defer t)
+
+(use-package nix-mode
   :straight t
   :defer t)
 
@@ -453,6 +401,26 @@
   ("zshrc$" . shell-script-mode)
   :custom
   (sh-basic-offset 2))
+(comment
+ progn
+ (require 'sh-script)
+ (define-hostmode poly-shell-script-hostmode
+   :mode 'shell-script-mode)
+ (define-innermode poly-shell-script-innermode
+   :mode nil
+   :fallback-mode 'host
+   :head-mode 'host
+   :tail-mode 'host)
+ (define-auto-innermode poly-shell-script-fenced-code-innermode poly-shell-script-innermode
+   :head-matcher (cons "^.*\\(<<LANG_[[:alpha:]]+\n\\)" 1)
+   :tail-matcher (cons "^\\(LANG_[[:alpha:]]+\\)$" 1)
+   :mode-matcher (cons "<<LANG_\\([[:alpha:]]+\\)" 1)
+   :head-mode 'host
+   :tail-mode 'host)
+ (define-polymode poly-shell-script-mode
+   :hostmode 'poly-shell-script-hostmode
+   :innermodes '(poly-shell-script-fenced-code-innermode))
+ (add-to-list 'auto-mode-alist '("\\.sh\\'" . poly-shell-script-mode)))
 
 (use-package nxml-mode
   :defer t

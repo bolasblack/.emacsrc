@@ -111,12 +111,6 @@
 ;; 在标题栏显示buffer的名字，而不是 emacs@email.***这样没用的提示。
 (setq frame-title-format "Emacs@%b")
 
-;; 把 lambda 显示成 λ
-(global-prettify-symbols-mode t)
-(add-hook 'lisp-mode-hook
-          (lambda ()
-            (push '("lambda" . ?λ) prettify-symbols-alist)))
-
 (delete-selection-mode -1)
 
 (when window-system

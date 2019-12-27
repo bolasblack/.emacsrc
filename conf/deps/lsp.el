@@ -19,14 +19,14 @@
 (use-package company-lsp
   :straight t
   :commands (company-lsp)
-  :hook
-  (company-mode . c4:company-lsp-company-mode-hook)
-  (lsp-mode . c4:company-lsp-company-mode-hook)
-  :init
+  :preface
   (defun c4:company-lsp-company-mode-hook ()
     (when (and (boundp 'lsp-mode) lsp-mode)
       (setq-local company-backends (delq 'company-capf company-backends))
-      (add-to-list 'company-backends '(company-lsp company-yasnippet company-files)))))
+      (add-to-list 'company-backends '(company-lsp company-yasnippet company-files))))
+  :hook
+  (company-mode . c4:company-lsp-company-mode-hook)
+  (lsp-mode . c4:company-lsp-company-mode-hook))
 
 (comment
  (use-package lsp-origami
