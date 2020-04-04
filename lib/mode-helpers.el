@@ -1,6 +1,6 @@
 (require 'dash)
 
-(provide-me)
+(provide 'mode-helpers)
 
 (defun activated-minor-modes ()
   "Get all current buffer activated minor modes"

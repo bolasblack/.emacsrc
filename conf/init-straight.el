@@ -3,8 +3,8 @@
 (provide 'init-straight)
 
 (defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+
+(let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -15,12 +15,4 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(defun straight-lock-plugin-versions (&rest _)
-  (interactive "P")
-  (straight-freeze-versions t)
-  (let ((filepath (concat dir-rc "versions.el")))
-    (and (file-exists-p filepath)
-         (delete-file filepath))
-    (copy-file (straight--versions-file "default.el")
-               filepath)
-    (message "Wrote %s" filepath)))
+(setq straight-disable-byte-compilation t)

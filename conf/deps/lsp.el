@@ -1,22 +1,24 @@
 (require 'init-use-package)
 (require 'dash)
+(require 'comment)
 
 (provide-me)
 
-(use-package lsp-mode
+(c4:use lsp-mode
   :straight t
   :commands (lsp)
   :custom
   (lsp-prefer-flymake nil)
   (lsp-auto-configure nil))
 
-(use-package lsp-ui
-  :straight t
-  :commands (lsp-ui-mode)
-  :hook
-  (lsp-mode . lsp-ui-mode))
+(comment
+ (c4:use lsp-ui
+   :straight t
+   :commands (lsp-ui-mode)
+   :hook
+   (lsp-mode . lsp-ui-mode)))
 
-(use-package company-lsp
+(c4:use company-lsp
   :straight t
   :commands (company-lsp)
   :preface
@@ -29,7 +31,7 @@
   (lsp-mode . c4:company-lsp-company-mode-hook))
 
 (comment
- (use-package lsp-origami
+ (c4:use lsp-origami
    :straight t
    :after (origami)
    :hook

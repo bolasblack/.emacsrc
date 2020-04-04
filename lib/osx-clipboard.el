@@ -45,6 +45,13 @@
              (equal (ad-get-arg 0) 'CLIPBOARD))
     (let ((process-connection-type nil)   ; ; use pipe
           (default-directory "~/"))
-      (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (let ((proc (make-process 
+                    :name "pbcopy"
+                    :command '("pbcopy")
+                    :buffer nil
+                    :stderr "*Messages*")))
+        (process-send-string proc (ad-get-arg 1))
+        (process-send-eof proc))
+      (comment let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
         (process-send-string proc (ad-get-arg 1))
         (process-send-eof proc)))))

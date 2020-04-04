@@ -5,44 +5,44 @@
 
 (provide-me)
 
-(use-package coffee-mode
+(c4:use coffee-mode
   :straight t
   :defer t
   :mode ("\\.coffee\\'"))
 
-(use-package jade-mode
+(c4:use jade-mode
   :straight t
   :defer t
   :mode ("\\.jade\\'"))
 
-(use-package css-mode
+(c4:use css-mode
   :defer t
   :mode ("\\.css\\'" "\\.wxss\\'")
   :custom
   (css-indent-offset 2))
 
-(use-package less-css-mode
+(c4:use less-css-mode
   :straight t
   :defer t
   :mode ("\\.less\\'"))
 
-(use-package sass-mode
+(c4:use sass-mode
   :straight t
   :defer t
   :mode ("\\.styl\\'"))
 
-(use-package jsx-mode
+(c4:use rjsx-mode
   :straight t
   :defer t)
 
-(use-package typescript-mode
+(c4:use typescript-mode
   :straight t
   :defer t
   :delight "ts"
   :custom
   (typescript-indent-level 2))
 
-(use-package graphql-mode
+(c4:use graphql-mode
   :straight t
   :defer t
   :mode ("\\.gql\\'" "\\.graphql\\'"))
@@ -78,7 +78,7 @@
         (call-interactively tab-key-fn)
       (call-interactively origin-fn))))
 
-(use-package web-mode
+(c4:use web-mode
   :straight t
   :defer t
   :mode ("\\.js\\'"
@@ -104,12 +104,12 @@
               :around
               'c4:web-mode-indent-for-tab-command-advice))
 
-(use-package js
+(c4:use js
   :defer t
   :custom
   (js-indent-level 2))
 
-(use-package rainbow-mode
+(c4:use rainbow-mode
   :straight t
   :defer t
   :delight
@@ -118,11 +118,11 @@
          sass-mode
          scss-mode))
 
-(use-package add-node-modules-path
+(c4:use add-node-modules-path
   :straight t
   :defer t)
 
-(use-package prettier-js
+(c4:use prettier-js
   :straight t
   :defer t
   :hook ((prettier-js-mode . add-node-modules-path)
@@ -135,7 +135,7 @@
   (prettier-js-args '("--config-precedence" "prefer-file")))
 
 
-(use-package tide
+(c4:use tide
   :straight t
   :after (typescript-mode company flycheck)
   :commands (tide-setup tide-hl-identifier-mode)
@@ -163,7 +163,7 @@
 
 (comment
  ;; https://github.com/emacs-lsp/lsp-ui/issues/266
- (use-package typescript-lsp
+ (c4:use typescript-lsp
    :no-require t
    :after (typescript-mode company flycheck web-mode lsp-mode)
    :hook

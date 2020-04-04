@@ -14,11 +14,11 @@
 ;;;;;;;;;;;;;;;;;; Emacs 加强 ;;;;;;;;;;;;;;;;;;
 
 ;; 显示行号
-(use-package display-line-numbers
+(c4:use display-line-numbers
   :if (fboundp 'global-display-line-numbers-mode)
   :config
   (global-display-line-numbers-mode t))
-(use-package linum
+(c4:use linum
   :if (not (fboundp 'global-display-line-numbers-mode))
   :straight t
   :custom
@@ -27,24 +27,24 @@
   (global-linum-mode t))
 
 ;; 给各个窗口编号
-(use-package window-numbering
+(c4:use window-numbering
   :straight t
   :config
   (window-numbering-mode t))
 
 ;; 主题
-(use-package zenburn-theme
+(c4:use zenburn-theme
   :straight t
   :config
   (load-theme 'zenburn t))
 
 ;; 增强 Emacs 的帮助系统
 ;; http://www.emacswiki.org/emacs/HelpPlus#toc3
-(use-package help-fns+
+(c4:use help-fns+
   :straight help-fns-plus)
 
 ;; 自动调整提示窗口的位置的尺寸
-(use-package popwin
+(c4:use popwin
   :straight t
   :custom
   (popwin:popup-window-height 15)
@@ -63,52 +63,53 @@
       (push config popwin:special-display-config))))
 
 ;; 另外一种外观更丰富的补全方式
-(use-package helm
+(c4:use helm
   :straight t
   :defer t
   :delight
-  :bind
-  ("C-x b" . helm-projectile-switch-to-grouped-buffer)
   :config
-  (require 'helm-config)
-  (require 'helm-projectile-switch-to-grouped-buffer))
+  (require 'helm-config))
+(c4:use helm-projectile-switch-to-grouped-buffer
+  :after (helm projectile)
+  :bind
+  ("C-x b" . helm-projectile-switch-to-grouped-buffer))
 
 ;; 缩进辅助线
-(use-package indent-guide
+(c4:use indent-guide
   :straight t
   :delight
   :config
   (indent-guide-global-mode t))
 
 ;; 快速跳转到界面上某个地方
-(use-package ace-jump-mode
+(c4:use ace-jump-mode
   :straight t
   :defer t
   :bind
   ("C-c C-c" . ace-jump-word-mode))
 
 ;; 让 Emacs 支持在 Shell 里自定义的 PATH
-(use-package exec-path-from-shell
+(c4:use exec-path-from-shell
   :straight t
   :if (memq window-system '(mac ns))
   :config
   (exec-path-from-shell-initialize))
 
 ;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
-(use-package which-key
+(c4:use which-key
   :straight t
   :delight
   :config
   (which-key-mode t))
 
 ;; 使用 C-p C-n 时平滑滚动，而不是直接向上/下一页跳几行
-(use-package smooth-scrolling
+(c4:use smooth-scrolling
   :straight t
   :config
   (smooth-scrolling-mode t))
 
 ;; 一个文件里支持多个主模式
-(use-package polymode
+(c4:use polymode
   :straight t)
 
 ;;;;;;;;;;;;;;;;;;;; 编辑 ;;;;;;;;;;;;;;;;;;;;
@@ -132,7 +133,7 @@
                  ("Level" 8 flycheck-error-list-entry-level-<)
                  ("ID" 50 t)
                  (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
-(use-package flycheck
+(c4:use flycheck
   :straight t
   :defer t
   :config
@@ -148,17 +149,17 @@
   (comment add-hook 'web-mode-hook 'c4:flycheck-add-eslint/web-mode-hook)
   (comment add-hook 'flycheck-error-list-mode-hook 'c4:flycheck-resize-id-column)
   (comment (flycheck-add-mode 'javascript-eslint 'web-mode)))
-(use-package flycheck-popup-tip
+(c4:use flycheck-popup-tip
   :straight t
   :if (not (display-graphic-p))
   :after flycheck
   :config
   (flycheck-popup-tip-mode t))
-(use-package flycheck-pos-tip
+(c4:use flycheck-pos-tip
   :straight t
   :if (display-graphic-p)
   :after flycheck)
-(use-package flycheck-posframe
+(c4:use flycheck-posframe
   :straight t
   :if (display-graphic-p)
   :after (flycheck-pos-tip)
@@ -168,20 +169,20 @@
     (flycheck-pos-tip-mode t)))
 
 ;; 自动标点配对（不只是标点配对）
-(use-package smartparens
+(c4:use smartparens
   :straight t
   :defer .1
   :delight
   :config
   (smartparens-global-mode t))
 
-(use-package smartparens-config
+(c4:use smartparens-config
   :after smartparens)
 
-(use-package undo-tree
+(c4:use undo-tree
   :straight t
   :defer t
-  :delight " undotree"
+  :delight " utree"
   :config
   (global-undo-tree-mode t))
 
@@ -190,7 +191,7 @@
 (load-relative "./deps/ivy")
 
 ;; snippet 引擎
-(use-package yasnippet
+(c4:use yasnippet
   :straight t
   :commands (yas-global-mode
              yas-minor-mode
@@ -201,12 +202,12 @@
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode t))
 
-(use-package drag-stuff
+(c4:use drag-stuff
   :straight t
   :defer t)
 
 ;; Sublime Text 的多光标模式
-;; (use-package multiple-cursors
+;; (c4:use multiple-cursors
 ;;   :straight t
 ;;   :bind
 ;;   (("C-c C-n" . mc/mark-next-lines)
@@ -216,17 +217,17 @@
 ;;    ("C-c h" . mc/mark-all-like-this)))
 
 ;; 便捷选区
-(use-package expand-region
+(c4:use expand-region
   :straight t
   :defer t)
 
 ;; 自动调整缩进
-(use-package aggressive-indent
+(c4:use aggressive-indent
   :straight t
   :defer t)
 
 ;; EditorConfig
-(use-package editorconfig
+(c4:use editorconfig
   :straight t
   :defer t
   :delight
@@ -237,7 +238,7 @@
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
 ;; CtrlP
-(use-package projectile
+(c4:use projectile
   :straight t
   :after (evil)
   :ensure-system-package (fd)
@@ -249,15 +250,24 @@
   (projectile-completion-system 'ivy)
   :config
   (require 'dash)
+  (require 'cl-generic)
   (setq projectile-project-root-files-bottom-up
         (-union
          '("package.json"
            "shadow-cljs.edn")
          projectile-project-root-files-bottom-up))
-  (projectile-mode t))
+  (projectile-mode t)
+  (require 'project)
+  (defun project-try-projectile (dir)
+    (let ((root (projectile-project-root)))
+      (and root (cons 'projectile root))))
+  (cl-defmethod project-roots ((project (head projectile)))
+    (list (cdr project)))
+  (setq project-find-functions
+        (-concat (list #'projectile-project-root) project-find-functions)))
 
 ;; 显示对比上次 commit 做了些什么修改
-(use-package git-gutter
+(c4:use git-gutter
   :straight t
   :defer t
   :delight
@@ -278,12 +288,12 @@
   (custom-set-variables
    '(git-gutter:unchanged-sign " ")))
 
-(use-package magit
+(c4:use magit
   :straight t
   :defer t)
 
 (comment
- (use-package vc-hooks
+ (c4:use vc-hooks
    :defer t
    :config
    (setcdr (assq 'vc-mode mode-line-format)
@@ -291,11 +301,12 @@
                          (replace-regexp-in-string "^ Git-" " " vc-mode)
                          (replace-regexp-in-string "feature/" "f/")))))))
 
-(use-package color-rg
+(c4:use color-rg
   :straight (color-rg :host github
                       :repo "manateelazycat/color-rg"
                       :files ("color-rg.el"))
   :defer t
+  :after (evil)
   :commands (color-rg-search-input
              color-rg-search-symbol
              color-rg-search-symbol-with-type
@@ -312,7 +323,7 @@
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
-(use-package poly-markdown
+(c4:use poly-markdown
   :straight t
   :after (polymode)
   :mode
@@ -320,7 +331,7 @@
   ("\\.mdx\\'" . poly-markdown-mode)
   ("\\.markdown\\'" . poly-markdown-mode))
 
-(use-package lua-mode
+(c4:use lua-mode
   :straight t
   :defer t
   :mode ("\\.lua\\'")
@@ -328,25 +339,25 @@
   :custom
   (lua-indent-level 2))
 
-(use-package gitignore-mode
+(c4:use gitignore-mode
   :straight t
   :defer t
   :mode ("gitignore$"))
 
-(use-package yaml-mode
+(c4:use yaml-mode
   :straight t
   :defer t
   :mode ("\\.yml\\'" "\\.yaml\\'"))
 
-(use-package nginx-mode
+(c4:use nginx-mode
   :straight t
   :defer t)
 
-(use-package nix-mode
+(c4:use nix-mode
   :straight t
   :defer t)
 
-(use-package apples-mode ;; AppleScript
+(c4:use apples-mode ;; AppleScript
   :straight t
   :defer t
   :mode ("\\.applescript\\'")
@@ -369,17 +380,17 @@
   ;;It is necessary to perform an update!
   (jka-compr-update))
 
-(use-package hcl-mode
+(c4:use hcl-mode
   :straight t
   :defer t
   :mode ("\\.tf\\'"))
 
-(use-package dockerfile-mode
+(c4:use dockerfile-mode
   :straight t
   :defer t
   :mode ("dockerfile$"))
 
-(use-package ledger-mode
+(c4:use ledger-mode
   :straight t
   :defer t
   :mode ("\\.beancount\\'" "\\.bean\\'")
@@ -388,14 +399,14 @@
             (lambda ()
               (bind-key "C-M-i" 'ledger-magic-tab ledger-mode-map))))
 
-(use-package beancount-mode
+(c4:use beancount-mode
   :straight (beancount :host github
                        :repo "beancount/beancount"
                        :files ("editors/emacs/*.el"))
   :after ledger-mode
   :hook ledger-mode)
 
-(use-package sh-script
+(c4:use sh-script
   :defer t
   :mode
   ("zshrc$" . shell-script-mode)
@@ -422,36 +433,44 @@
    :innermodes '(poly-shell-script-fenced-code-innermode))
  (add-to-list 'auto-mode-alist '("\\.sh\\'" . poly-shell-script-mode)))
 
-(use-package nxml-mode
+(c4:use nxml-mode
   :defer t
   :mode ("\\.aiml$"))
 
 ;;;;;;;;;;;;;;;;;;;; Common Lisp ;;;;;;;;;;;;;;;;;;;;
 
 ;; Common Lisp 开发环境
-;; (use-package slime
+;; (c4:use slime
 ;;   :straight t
 ;;   :init
 ;;   (setq inferior-lisp-program (or (getenv "LISP_PROGRAM") "clisp"))
 ;;   :config
 ;;   (slime-setup '(slime-fancy slime-company)))
-;; (use-package slime-company
+;; (c4:use slime-company
 ;;   :straight t)
 
 ;;;;;;;;;;;;;;;;;;;; Ruby ;;;;;;;;;;;;;;;;;;;;
 
 ;; Ruby 开发环境
-;; (use-package robe
+;; (c4:use robe
 ;;   :straight t
 ;;   :config
 ;;   (add-hook 'ruby-mode-hook 'robe-mode))
-;; (use-package inf-ruby
+;; (c4:use inf-ruby
 ;;   :straight t)
+
+;;;;;;;;;;;;;;;;;;;; Rust ;;;;;;;;;;;;;;;;;;;;
+
+(c4:use rustic
+  :straight t
+  :defer t
+  :config
+  (require 'lsp-rust nil t))
 
 ;;;;;;;;;;;;;;;;;;;; Clojure ;;;;;;;;;;;;;;;;;;;;
 
 ;; Clojure 开发环境
-(use-package clojure-mode
+(c4:use clojure-mode
   :straight t
   :defer t
   :mode ("\\.clj\\'" "\\.cljs\\'")
@@ -471,7 +490,7 @@
     (it 'defun)
     (cond-converge 'defun)))
 
-;; (use-package inf-clojure
+;; (c4:use inf-clojure
 ;;   :straight t
 ;;   :defer t
 ;;   :hook clojure-mode
@@ -479,20 +498,22 @@
 ;;   (inf-clojure-generic-cmd "lumo -d")
 ;;   (inf-clojure-boot-cmd "lumo -d"))
 
-(use-package cider
+(c4:use cider
   :straight t
   :after (clojure-mode))
 
 ;;;;;;;;;;;;;;;;;;;; Emacs Lisp ;;;;;;;;;;;;;;;;;;;;
 
-(use-package elisp-mode
+(c4:use elisp-mode
   :defer t
   :delight
   (emacs-lisp-mode ("El" (lexical-binding ":Lex" ":Dyn")))
   :mode
   ("Cask"))
 
-(use-package pretty-eval-last-sexp
+(c4:use pretty-eval-last-sexp
+  :custom
+  (pretty-eval-last-sexp-show-results-in-log t)
   :commands
   (pretty-eval-last-sexp)
   :bind
@@ -500,7 +521,7 @@
 
 ;;;;;;;;;;;;;;;;;;;; Lisp ;;;;;;;;;;;;;;;;;;;;
 
-(use-package paredit
+(c4:use paredit
   :straight t
   :defer t
   :commands (enable-paredit-mode)
@@ -515,76 +536,55 @@
           lisp-interaction-mode
           scheme-mode) . enable-paredit-mode))
 
-(use-package selected
+(c4:use selected
   :straight t
   :defer t
   :delight
   :no-require t)
-(use-package parinfer-smart
-  :straight
-  (parinfer-smart :host github
-                  :branch "smart"
-                  :repo "DogLooksGood/parinfer-mode"
-                  :files ("*.el"))
+(c4:use parinfer
+  :straight t
   :defer t
-  :after (company)
   :delight
   (parinfer-mode (:eval (if (boundp 'parinfer--mode)
-                            (progn
-                              ((eq 'paren parinfer--mode) " P:Paren")
-                              ((eq 'indent parinfer--mode) " P:Indent")
-                              (t " P:Unknown"))
-                          " parinfer")))
+                            (cond
+                             ((eq 'paren parinfer--mode) " P:Par")
+                             ((eq 'indent parinfer--mode) " P:Ind")
+                             (t " P:Unknown"))
+                          " P:")))
   :bind
   (:map paredit-mode-map
         (";" . self-insert-command))
-  :hook ((clojure-mode
-          clojurescript-mode
-          emacs-lisp-mode
-          common-lisp-mode
-          scheme-mode
-          lisp-mode) . parinfer-mode)
-  :config
-  (setq parinfer-partial-process t
-        parinfer-extensions
+  :hook
+  ((clojure-mode
+    clojurescript-mode
+    emacs-lisp-mode
+    elisp-mode
+    common-lisp-mode
+    scheme-mode
+    lisp-mode) . parinfer-mode)
+  (parinfer-mode . user/when-parinfer-mode-enabled)
+  :init
+  (defun user/when-parinfer-mode-enabled ()
+    (parinfer--switch-to-paren-mode))
+  (setq parinfer-extensions
         '(defaults        ; should be included.
            pretty-parens  ; different paren styles for different modes.
            evil           ; If you use Evil.
            paredit        ; Introduce some paredit commands.
            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-           smart-yank))   ; Yank behavior depend on mode.
-  (defun parinfer---lint ()
-    (unless (string-prefix-p "*temp*" (string-trim (buffer-name)))
-      (let ((err nil))
-        (when (save-excursion (goto-char (point-min))
-                              (search-forward "\t" (point-max) t))
-          (setq err "Can't enable parinfer due to inconsistent indentation."))
-        (let ((buffer-text (buffer-substring-no-properties (point-min) (point-max)))
-              (mm major-mode))
-          (with-temp-buffer
-            (insert buffer-text)
-            (funcall mm)
-            (parinfer--initial-states)
-            (condition-case ex
-                (parinfer--process-buffer)
-              (error
-               (setq err (concat "Can't enable parinfer due to error: " (cadr ex)))))
-            (unless (or (string-equal (buffer-substring-no-properties (point-min) (point-max))
-                                      buffer-text)
-                        (yes-or-no-p "Enable parinfer will modify current buffer content, continue?"))
-              (setq err "Can't enable parinfer due to buffer will be changed."))))
-        err))))
+           smart-yank)))  ; Yank behavior depend on mode.
 
-(use-package rainbow-delimiters
+(c4:use rainbow-delimiters
   :straight t
   :defer t
   :delight
-  :hook ((clojurescript-mode
-          clojure-mode
-          emacs-lisp-mode
-          common-lisp-mode
-          scheme-mode
-          lisp-mode) . rainbow-delimiters-mode))
+  :hook
+  ((clojurescript-mode
+    clojure-mode
+    scheme-mode
+    common-lisp-mode
+    emacs-lisp-mode
+    lisp-mode) . rainbow-delimiters-mode))
 
 (load-relative "./deps/evil")
 (load-relative "./deps/origami")

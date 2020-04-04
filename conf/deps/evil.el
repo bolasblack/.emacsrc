@@ -1,8 +1,6 @@
 (require 'init-use-package)
 
-(provide-me)
-
-(use-package evil
+(c4:use evil
   :straight t
   :defer .1
   :bind
@@ -10,12 +8,12 @@
   :config
   (evil-mode 1))
 
-(use-package general
+(c4:use general
   :straight t
   :config
   (general-evil-setup))
 
-(use-package evil-nerd-commenter
+(c4:use evil-nerd-commenter
   :straight t
   :after (general evil)
   :general
@@ -27,7 +25,7 @@
     "cr" 'comment-or-uncomment-region
     "cv" 'evilnc-toggle-invert-comment-line-by-line))
 
-(use-package evil-easymotion
+(c4:use evil-easymotion
   :straight t
   :after (evil)
   :custom

@@ -3,7 +3,7 @@
 (provide-me)
 
 ;; 一种补全方式
-(use-package ivy
+(c4:use ivy
   :straight t
   :defer .1
   :delight
@@ -38,14 +38,14 @@
      `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold)))))))
 
 ;; 扩展 ivy
-(use-package counsel
+(c4:use counsel
   :straight t
   :after (ivy)
   :bind
   (:map counsel-find-file-map ("C-w" . ivy-backward-kill-word)))
 
 ;; 给 ivy 选项排序
-(use-package ivy-prescient
+(c4:use ivy-prescient
   :straight t
   :after (counsel)
   :config

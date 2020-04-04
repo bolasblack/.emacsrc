@@ -2,7 +2,7 @@
 
 (provide-me)
 
-(use-package company
+(c4:use company
   :straight t
   :delight
   :defer .1
@@ -27,7 +27,7 @@
   :config
   (global-company-mode t))
 
-(use-package company-quickhelp
+(c4:use company-quickhelp
   :straight t
   :delight
   :after (company)
@@ -35,7 +35,7 @@
   :config
   (company-quickhelp-mode))
 
-(use-package company-echo-doc
+(c4:use company-echo-doc
   :after (company)
   :if (not (display-graphic-p))
   :custom
@@ -49,7 +49,7 @@
   (company-echo-doc-mode))
 
 ;; 给补全选项排序
-(use-package company-prescient
+(c4:use company-prescient
   :straight t
   :after (company)
   :hook ((company-mode) . company-prescient-mode))

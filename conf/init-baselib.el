@@ -2,26 +2,26 @@
 
 (provide-me)
 
-(use-package edn
+(c4:use edn
   :straight t
   :defer t)
 
 ;; https://github.com/magnars/dash.el
-(use-package dash
+(c4:use dash
   :straight t
   :defer t)
 
 ;; https://github.com/magnars/s.el
-(use-package s
+(c4:use s
   :straight t
   :defer t)
 
 ;; https://github.com/rejeep/f.el
-(use-package f
+(c4:use f
   :straight t
   :defer t)
 
 ;; https://github.com/Wilfred/ht.el
-(use-package ht
+(c4:use ht
   :straight t
   :defer t)

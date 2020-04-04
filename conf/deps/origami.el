@@ -2,9 +2,10 @@
 
 (provide-me)
 
-(use-package origami
+(c4:use origami
   :straight t
   :defer .1
+  :after (evil)
   :bind
   (:map evil-normal-state-map ("zo" . origami-open-node))
   (:map evil-normal-state-map ("zO" . origami-open-node-recursively))
