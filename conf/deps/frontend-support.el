@@ -140,13 +140,13 @@
   :after (typescript-mode company flycheck)
   :commands (tide-setup tide-hl-identifier-mode)
   :preface
-  
+
   (defun c4:tide-mode/typescript-mode-hook ()
     (yas-activate-extra-mode 'js-mode)
     (tide-setup)
     (tide-hl-identifier-mode))
   (add-hook 'typescript-mode 'c4:tide-mode/typescript-mode-hook)
-  
+
   (defun c4:tide-mode/web-mode-hook ()
     (let ((file-ext (file-name-extension buffer-file-name)))
       (when (or (string-equal "tsx" file-ext)
@@ -156,9 +156,26 @@
   (add-hook 'web-mode-hook 'c4:tide-mode/web-mode-hook)
 
   (add-hook 'flycheck-mode-hook
-            (lambda () 
+            (lambda ()
               (setf (flycheck-checker-get 'typescript-tide 'modes) '(web-mode typescript-mode))))
-  
+
+  (defun c4:tide-completion-source (name)
+    (-when-let* ((response (tide-completion-entry-details name)))
+      (-> response
+          (plist-get :body)
+          (car)
+          (plist-get :source)
+          (car)
+          (plist-get :text))))
+  (defun c4:tide-completion-annotation@around (tide-completion-annotation name)
+    (let* ((tide-completion-detailed nil)
+           (source (c4:tide-completion-source name))
+           (old-anno (funcall tide-completion-annotation name)))
+      (if source
+          (format "%s %s" old-anno source)
+        old-anno)))
+  (advice-add 'tide-completion-annotation :around 'c4:tide-completion-annotation@around)
+
   :config)
 
 (comment

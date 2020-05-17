@@ -25,3 +25,5 @@
 (c4:use ht
   :straight t
   :defer t)
+
+(load-relative "./baselib/mode")
