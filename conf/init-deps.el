@@ -2,7 +2,6 @@
 
 (require 'comment)
 (require 'straight)
-(require 'use-package)
 (require 'mode-helpers)
 
 (provide-me)
@@ -543,7 +542,7 @@
   :no-require t)
 (c4:use parinfer
   :straight t
-  :defer t
+  :after (paredit)
   :delight
   (parinfer-mode (:eval (if (boundp 'parinfer--mode)
                             (cond
@@ -555,17 +554,23 @@
   (:map paredit-mode-map
         (";" . self-insert-command))
   :hook
-  ((clojure-mode
-    clojurescript-mode
-    emacs-lisp-mode
-    elisp-mode
-    common-lisp-mode
-    scheme-mode
-    lisp-mode) . parinfer-mode)
-  (parinfer-mode . user/when-parinfer-mode-enabled)
+  (((clojure-mode
+     clojurescript-mode
+     emacs-lisp-mode
+     elisp-mode
+     common-lisp-mode
+     scheme-mode
+     lisp-mode) . parinfer-mode)
+   (evil-insert-state-entry . user/parinfer-safe-switch-to-indent-mode)
+   (evil-insert-state-exit . user/parinfer-safe-switch-to-paren-mode)
+   (parinfer-mode . user/parinfer-safe-switch-to-paren-mode))
   :init
-  (defun user/when-parinfer-mode-enabled ()
-    (parinfer--switch-to-paren-mode))
+  (defun user/parinfer-safe-do (fn)
+    (user/when-mode-enabled 'parinfer-mode fn))
+  (defun user/parinfer-safe-switch-to-indent-mode ()
+    (user/parinfer-safe-do #'parinfer--switch-to-indent-mode))
+  (defun user/parinfer-safe-switch-to-paren-mode ()
+    (user/parinfer-safe-do #'parinfer--switch-to-paren-mode))
   (setq parinfer-extensions
         '(defaults        ; should be included.
            pretty-parens  ; different paren styles for different modes.
