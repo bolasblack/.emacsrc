@@ -200,6 +200,8 @@
   :config
   (add-to-list 'yas-snippet-dirs dir-snippet)
   (yas-global-mode t))
+(c4:use yasnippet-snippets
+  :straight t)
 
 (c4:use drag-stuff
   :straight t

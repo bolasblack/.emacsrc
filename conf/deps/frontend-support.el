@@ -51,7 +51,8 @@
   '(("css"        . css-mode)
     ("html"       . html-mode)
     ("javascript" . js-mode)
-    ("jsx"        . js-mode)))
+    ("jsx"        . js-mode)
+    ("typescript" . typescript-mode)))
 
 (defun c4:web-mode-indent-for-tab-command-advice (origin-fn &rest args)
   (interactive)
@@ -99,7 +100,11 @@
   (web-mode-code-indent-offset 2)
   (web-mode-attr-indent-offset 2)
   (web-mode-markup-indent-offset 2)
+  :hook
+  ((web-mode . c4:set-comment-line-break-function))
   :config
+  (defun c4:set-comment-line-break-function ()
+    (setq-local comment-line-break-function #'web-mode-comment-indent-new-line))
   (advice-add 'indent-for-tab-command
               :around
               'c4:web-mode-indent-for-tab-command-advice))
