@@ -139,49 +139,95 @@
   :custom
   (prettier-js-args '("--config-precedence" "prefer-file")))
 
+(defun c4:tide-completion-annotation (name)
+  (c4:tide-completion-append-source
+   (c4:tide-completion-annotation-trans-mark name)
+   name))
+
+(defun c4:tide-completion-append-source (text name)
+  (-if-let* ((completion
+              (get-text-property 0 'completion name))
+
+             (raw-source
+              (plist-get completion :source)))
+      (tide-join (list text " " (c4:tide-normalize-source raw-source)))
+    text))
+
+(defun c4:tide-normalize-source (source)
+  (-->
+   source
+   (comment if (f-absolute? it)
+            (f-relative it (buffer-file-name))
+            it)
+   (if (file-name-absolute-p it)
+       (file-relative-name it (buffer-file-name))
+     it)
+   (if (s-contains? "/node_modules/" it)
+       (->> it
+            (s-split "/node_modules/")
+            (-last-item))
+     it)
+   (s-chop-suffix "/index" it)
+   (if (s-starts-with? "@types/" it)
+       (-as-> (s-chop-prefix "@types/" it) itt
+              (if (s-contains? "__" itt)
+                  (->> itt
+                       (s-replace "__" "/")
+                       (s-concat "@"))
+                itt))
+     it)))
+
+(defun c4:tide-completion-annotation-trans-mark (name)
+  (pcase (plist-get (get-text-property 0 'completion name) :kind)
+    ("keyword" " k")
+    ("module" " M")
+    ("class" " C")
+    ("interface" " I")
+    ("type" " T")
+    ("enum" " E")
+    ("var" " v")
+    ("local var" " v")
+    ("function" " ƒ")
+    ("local function" " ƒ")
+    ("method" " m")
+    ("getter" " m")
+    ("setter" " m")
+    ("property" " p")
+    ("constructor" " c")
+    ("call" " m")
+    ("index" " i")
+    ("construct" " m")
+    ("parameter" " p")
+    ("type parameter" " T")
+    ("primitive type" " T")
+    ("label" " l")
+    ("alias" " A")
+    ("const" " c")
+    ("let" " l")
+    (_ nil)))
 
 (c4:use tide
   :straight t
   :after (typescript-mode company flycheck)
   :commands (tide-setup tide-hl-identifier-mode)
-  :preface
-
-  (defun c4:tide-mode/typescript-mode-hook ()
-    (yas-activate-extra-mode 'js-mode)
-    (tide-setup)
-    (tide-hl-identifier-mode))
-  (add-hook 'typescript-mode 'c4:tide-mode/typescript-mode-hook)
-
-  (defun c4:tide-mode/web-mode-hook ()
-    (let ((file-ext (file-name-extension buffer-file-name)))
-      (when (or (string-equal "tsx" file-ext)
-                (string-equal "ts" file-ext))
-        (tide-setup)
-        (tide-hl-identifier-mode))))
-  (add-hook 'web-mode-hook 'c4:tide-mode/web-mode-hook)
-
+  :config
+  (add-hook 'typescript-mode
+            (lambda ()
+              (yas-activate-extra-mode 'js-mode)
+              (tide-setup)
+              (tide-hl-identifier-mode)))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (let ((file-ext (file-name-extension buffer-file-name)))
+                (when (or (string-equal "tsx" file-ext)
+                          (string-equal "ts" file-ext))
+                  (tide-setup)
+                  (tide-hl-identifier-mode)))))
   (add-hook 'flycheck-mode-hook
             (lambda ()
               (setf (flycheck-checker-get 'typescript-tide 'modes) '(web-mode typescript-mode))))
-
-  (defun c4:tide-completion-source (name)
-    (-when-let* ((response (tide-completion-entry-details name)))
-      (-> response
-          (plist-get :body)
-          (car)
-          (plist-get :source)
-          (car)
-          (plist-get :text))))
-  (defun c4:tide-completion-annotation@around (tide-completion-annotation name)
-    (let* ((tide-completion-detailed nil)
-           (source (c4:tide-completion-source name))
-           (old-anno (funcall tide-completion-annotation name)))
-      (if source
-          (format "%s %s" old-anno source)
-        old-anno)))
-  (advice-add 'tide-completion-annotation :around 'c4:tide-completion-annotation@around)
-
-  :config)
+  (fset 'tide-completion-annotation 'c4:tide-completion-annotation)
+  (fset 'tide-completion-annotation-trans-mark 'c4:tide-completion-annotation-trans-mark))
 
 (comment
  ;; https://github.com/emacs-lsp/lsp-ui/issues/266
