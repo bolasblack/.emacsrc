@@ -156,10 +156,8 @@
 (defun c4:tide-normalize-source (source)
   (-->
    source
-   (comment if (f-absolute? it)
-            (f-relative it (buffer-file-name))
-            it)
-   (if (file-name-absolute-p it)
+   (if (and (stringp it)
+            (file-name-absolute-p it))
        (file-relative-name it (buffer-file-name))
      it)
    (if (s-contains? "/node_modules/" it)
@@ -206,26 +204,29 @@
     ("let" " l")
     (_ nil)))
 
+(defun c4:tide-setup ()
+  (tide-setup)
+  (tide-hl-identifier-mode))
+  
+
 (c4:use tide
   :straight t
-  :after (typescript-mode company flycheck)
+  :after (company flycheck)
   :commands (tide-setup tide-hl-identifier-mode)
+  :hook
+  ((typescript-mode . (lambda ()
+                        (yas-activate-extra-mode 'js-mode)
+                        (c4:tide-setup)))
+   (web-mode . (lambda ()
+                 (let ((file-ext (file-name-extension buffer-file-name)))
+                   (when (or (string-equal "tsx" file-ext)
+                             (string-equal "ts" file-ext))
+                     (c4:tide-setup))))))
   :config
-  (add-hook 'typescript-mode
-            (lambda ()
-              (yas-activate-extra-mode 'js-mode)
-              (tide-setup)
-              (tide-hl-identifier-mode)))
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (let ((file-ext (file-name-extension buffer-file-name)))
-                (when (or (string-equal "tsx" file-ext)
-                          (string-equal "ts" file-ext))
-                  (tide-setup)
-                  (tide-hl-identifier-mode)))))
-  (add-hook 'flycheck-mode-hook
-            (lambda ()
-              (setf (flycheck-checker-get 'typescript-tide 'modes) '(web-mode typescript-mode))))
+  (flycheck-remove-next-checker 'typescript-tide 'typescript-tslint)
+  (flycheck-add-next-checker 'typescript-tide '(warning . javascript-eslint) 'append)
+  (push 'web-mode (flycheck-checker-get 'typescript-tide 'modes))
+  (push 'web-mode (flycheck-checker-get 'javascript-eslint 'modes))
   (fset 'tide-completion-annotation 'c4:tide-completion-annotation)
   (fset 'tide-completion-annotation-trans-mark 'c4:tide-completion-annotation-trans-mark))
 
