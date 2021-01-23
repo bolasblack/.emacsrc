@@ -134,7 +134,6 @@
                  (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
 (c4:use flycheck
   :straight t
-  :defer t
   :config
   (global-flycheck-mode t)
   (add-hook 'emacs-lisp-mode-hook
