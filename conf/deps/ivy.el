@@ -48,5 +48,12 @@
 (c4:use ivy-prescient
   :straight t
   :after (counsel)
+  :custom
+  (ivy-prescient-sort-commands
+   '(:not
+     ;; default value
+     swiper swiper-isearch ivy-switch-buffer
+     ;; in dump mode, ivy opened very slowly when calling execute-extended-command
+     execute-extended-command))
   :config
   (ivy-prescient-mode))
