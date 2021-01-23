@@ -35,17 +35,20 @@
 (put 'c4:use 'lisp-indent-function 'defun)
 
 (comment
- (macroexpand-1
-  '(c4:use delight
-     :defer .1
-     :straight t))
- (macroexpand-1
-  '(c4:use delight
-     :straight t
-     :defer .1))
- (macroexpand-1
-  '(c4:use delight
-     :straight t)))
+ (let ((c4:use/lazy-load nil))
+   (macroexpand-1
+    '(c4:use delight
+       :defer .1
+       :straight t)))
+ (let ((c4:use/lazy-load nil))
+   (macroexpand-1
+    '(c4:use delight
+       :straight t
+       :defer .1)))
+ (let ((c4:use/lazy-load nil))
+   (macroexpand-1
+    '(c4:use delight
+       :straight t))))
 
 (c4:use use-package-evil-bind)
 
