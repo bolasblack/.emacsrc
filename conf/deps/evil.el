@@ -5,8 +5,24 @@
   :defer .1
   :bind
   (:map evil-normal-state-map ("C-u" . scroll-down-command))
+  (:map evil-insert-state-map
+        ("M-p" . evil-complete-previous)
+        ("M-n" . evil-complete-next))
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (defun c4:evil:remap-bind (&rest _)
+    (let ((bufname (buffer-name (current-buffer))))
+      (cond
+       ((string= bufname "*color-rg*")
+        (bind-key "RET" #'color-rg-open-file evil-normal-state-map))
+       
+       ((string= bufname "*xref*")
+        (bind-key "RET" #'xref-goto-xref evil-normal-state-map))
+       
+       (t
+        (bind-key "RET" #'evil-ret evil-normal-state-map)))))
+  (add-hook 'window-selection-change-functions 'c4:evil:remap-bind)
+  (add-hook 'window-buffer-change-functions 'c4:evil:remap-bind))
 
 (c4:use general
   :straight t

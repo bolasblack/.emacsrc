@@ -3,6 +3,7 @@
 (require 'comment)
 (require 'straight)
 (require 'mode-helpers)
+(require 'load-relative)
 
 (provide-me)
 
@@ -17,7 +18,7 @@
   :if (fboundp 'global-display-line-numbers-mode)
   :config
   (global-display-line-numbers-mode t))
-(c4:use linum
+(c4:use nlinum
   :if (not (fboundp 'global-display-line-numbers-mode))
   :straight t
   :custom
@@ -241,7 +242,7 @@
 (c4:use projectile
   :straight t
   :after (evil)
-  :ensure-system-package (fd)
+  :ensure-system-package (fd rg)
   :delight
   '(:eval (concat " p[" (projectile-project-name) "]"))
   :bind
@@ -250,21 +251,12 @@
   (projectile-completion-system 'ivy)
   :config
   (require 'dash)
-  (require 'cl-generic)
   (setq projectile-project-root-files-bottom-up
         (-union
          '("package.json"
            "shadow-cljs.edn")
          projectile-project-root-files-bottom-up))
-  (projectile-mode t)
-  (require 'project)
-  (defun project-try-projectile (dir)
-    (let ((root (projectile-project-root)))
-      (and root (cons 'projectile root))))
-  (cl-defmethod project-roots ((project (head projectile)))
-    (list (cdr project)))
-  (setq project-find-functions
-        (-concat (list #'projectile-project-root) project-find-functions)))
+  (projectile-mode t))
 
 ;; 显示对比上次 commit 做了些什么修改
 (c4:use git-gutter
@@ -305,6 +297,7 @@
   :straight (color-rg :host github
                       :repo "manateelazycat/color-rg"
                       :files ("color-rg.el"))
+  :ensure-system-package (rg)
   :defer t
   :after (evil)
   :commands (color-rg-search-input
@@ -316,10 +309,7 @@
              color-rg-search-input-in-project
              color-rg-search-symbol-in-project
              color-rg-search-project-rails
-             color-rg-search-project-rails-with-type)
-  :ensure-system-package (rg)
-  :bind
-  (:map evil-normal-state-map ("RET" . color-rg-open-file)))
+             color-rg-search-project-rails-with-type))
 
 ;;;;;;;;;;;;;;;;;;;; 其他文件的支持 ;;;;;;;;;;;;;;;;;;;;
 
@@ -340,7 +330,7 @@
   (lua-indent-level 2))
 
 (c4:use gitignore-mode
-  :straight t
+  :straight nil
   :defer t
   :mode ("gitignore$"))
 
@@ -437,6 +427,11 @@
   :defer t
   :mode ("\\.aiml$"))
 
+(c4:use nix-ts-mode
+  :defer t
+  :straight t
+  :mode ("\\.nix\\$"))
+
 ;;;;;;;;;;;;;;;;;;;; Common Lisp ;;;;;;;;;;;;;;;;;;;;
 
 ;; Common Lisp 开发环境
@@ -526,8 +521,7 @@
   :defer t
   :commands (enable-paredit-mode)
   :delight
-  :hook ((clojurescript-mode
-          clojure-mode
+  :hook ((clojure-mode
           clojurescript-mode
           eval-expression-minibuffer-setup
           emacs-lisp-mode
@@ -594,7 +588,8 @@
 
 (load-relative "./deps/evil")
 (load-relative "./deps/origami")
+(load-relative "./deps/treesit")
 (load-relative "./deps/lsp")
+(load-relative "./deps/tide")
 (load-relative "./deps/frontend-support")
-(load-relative "./deps/json-support")
 (load-relative "./deps/org-mode")

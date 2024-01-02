@@ -1,7 +1,5 @@
 (require 'init-use-package)
 
-(provide-me)
-
 ;; 一种补全方式
 (c4:use ivy
   :straight t
@@ -15,6 +13,10 @@
   (ivy-use-selectable-prompt t)
   :config
   (ivy-mode t)
+  (when (memq 'zenburn custom-enabled-themes)
+    (zenburn-with-color-variables
+      (set-face-attribute 'ivy-current-match nil
+                          :background zenburn-bg+2)))
   ;; https://honmaple.me/articles/2018/06/%E8%87%AA%E5%AE%9A%E4%B9%89helm%E5%BC%8F%E7%9A%84ivy.html#org-46223305
   (defun c4:ivy-tab ()
     (interactive)
@@ -25,17 +27,7 @@
         (when (and (eq (ivy-state-collection ivy-last) #'read-file-name-internal)
                    (setq dir (ivy-expand-file-if-directory (ivy-state-current ivy-last))))
           (ivy--cd dir)
-          (setq this-command 'ivy-cd)))))
-  (zenburn-with-color-variables
-    (custom-theme-set-faces
-     'zenburn
-     `(ivy-current-match           ((t (                              :background ,zenburn-bg-1))))
-     `(ivy-remote                  ((t (:foreground ,zenburn-blue     :background ,zenburn-bg))))
-     `(ivy-subdir                  ((t (:foreground ,zenburn-yellow   :background ,zenburn-bg))))
-     `(ivy-minibuffer-match-face-1 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-2 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-3 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold))))
-     `(ivy-minibuffer-match-face-4 ((t (:foreground ,zenburn-yellow   :background ,zenburn-blue-3 :weight bold)))))))
+          (setq this-command 'ivy-cd))))))
 
 ;; 扩展 ivy
 (c4:use counsel

@@ -1,7 +1,5 @@
 (require 'init-use-package)
 
-(provide-me)
-
 (c4:use company
   :straight t
   :delight
@@ -16,10 +14,15 @@
                        company-dabbrev)))
   (evil-complete-previous-func 'c4:company-complete-previous-func)
   (evil-complete-next-func 'c4:company-complete-next-func)
-  :bind (:map company-active-map
-              ("C-n" . company-select-next)
-              ("C-p" . company-select-previous))
+  :bind
+  (:map company-active-map
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous))
+  (:map company-search-map
+        ("M-n" . company-select-next)
+        ("M-p" . company-select-previous))
   :init
+  ;; others
   (defun c4:company-complete-previous-func (&rest args)
     (company-complete))
   (defun c4:company-complete-next-func (&rest args)

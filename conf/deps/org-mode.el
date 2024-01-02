@@ -1,7 +1,5 @@
 (require 'init-use-package)
 
-(provide-me)
-
 (c4:use org
   :hook
   ((org-mode . c4:org-mode-hook))

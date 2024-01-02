@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-
-(provide-me)
+(require 'init-use-package)
 
 (c4:use origami
   :straight t
