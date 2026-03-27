@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; company-echo-doc.el --- Show documentation in echo area for completion candidates
 
 ;; Copyright (C) 2019, c4605

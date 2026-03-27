@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; https://emacs-china.org/t/topic/3927/3
 ;;
 ;; Usage:

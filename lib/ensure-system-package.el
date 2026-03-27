@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; inspired by github:waymondo/use-package-ensure-system-package
 
 (require 'system-packages)

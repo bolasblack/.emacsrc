@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (require 'init-use-package)
 
 (c4:use company

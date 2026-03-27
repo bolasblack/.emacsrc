@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (provide-me)
 
 (defun user/when-mode-enabled (mode-sym fn)

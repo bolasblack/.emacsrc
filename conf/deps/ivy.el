@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (require 'init-use-package)
 
 ;; 一种补全方式

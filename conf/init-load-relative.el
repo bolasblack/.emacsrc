@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (require 'init-straight)
 
 (straight-use-package 'load-relative)

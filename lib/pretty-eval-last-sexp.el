@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (defcustom pretty-eval-last-sexp-show-results-in-log nil
   "Should still show results in *Message* buffer?")
 
@@ -54,10 +55,11 @@ this command arranges for all errors to enter the debugger."
   (if (null eval-expression-debug-on-error)
       (pretty-eval-last-sexp--show
        (pretty-eval-last-sexp--eval eval-last-sexp-arg-internal))
-    (let ((value (let ((debug-on-error elisp--eval-last-sexp-fake-value))
-                   (cons (pretty-eval-last-sexp--eval eval-last-sexp-arg-internal)
-                         debug-on-error))))
-      (unless (eq (cdr value) elisp--eval-last-sexp-fake-value)
+    (let* ((sentinel (make-symbol "pretty-eval-sentinel"))
+           (value (let ((debug-on-error sentinel))
+                    (cons (pretty-eval-last-sexp--eval eval-last-sexp-arg-internal)
+                          debug-on-error))))
+      (unless (eq (cdr value) sentinel)
         (setq debug-on-error (cdr value)))
       (pretty-eval-last-sexp--show (car value)))))
 

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; -*- Emacs-Lisp -*-
 
 (defun am-intern (&rest strings)

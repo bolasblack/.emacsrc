@@ -29,6 +29,7 @@
 ;; 给各个窗口编号
 (c4:use window-numbering
   :straight t
+  :defer 1
   :config
   (window-numbering-mode t))
 
@@ -46,6 +47,7 @@
 ;; 自动调整提示窗口的位置的尺寸
 (c4:use popwin
   :straight t
+  :defer 1
   :custom
   (popwin:popup-window-height 15)
   :config
@@ -77,6 +79,7 @@
 ;; 缩进辅助线
 (c4:use indent-guide
   :straight t
+  :defer 1
   :delight
   :config
   (indent-guide-global-mode t))
@@ -89,15 +92,19 @@
   ("C-c C-c" . ace-jump-word-mode))
 
 ;; 让 Emacs 支持在 Shell 里自定义的 PATH
+;; macOS 下无论 GUI 还是 terminal 模式都需要，因为 macOS 不会从 shell profile 继承环境变量
+;; 延迟 1 秒加载，避免启动时阻塞（spawn shell 子进程需要 200-500ms）
 (c4:use exec-path-from-shell
   :straight t
-  :if (memq window-system '(mac ns))
+  :defer 1
+  :if (eq system-type 'darwin)
   :config
   (exec-path-from-shell-initialize))
 
 ;; 按了 prefix 一段时间后底部会弹出一个小窗口显示接下来可以按的键
+;; Emacs 30 内置了 which-key，不需要额外安装
 (c4:use which-key
-  :straight t
+  :defer 1
   :delight
   :config
   (which-key-mode t))
@@ -105,6 +112,7 @@
 ;; 使用 C-p C-n 时平滑滚动，而不是直接向上/下一页跳几行
 (c4:use smooth-scrolling
   :straight t
+  :defer 1
   :config
   (smooth-scrolling-mode t))
 
@@ -135,6 +143,7 @@
                  (,(flycheck-error-list-make-last-column "Message" 'Checker) 0 t)]))
 (c4:use flycheck
   :straight t
+  :defer 2
   :config
   (global-flycheck-mode t)
   (add-hook 'emacs-lisp-mode-hook
@@ -235,6 +244,7 @@
   :ensure-system-package editorconfig
   :config
   (editorconfig-mode t))
+
 
 ;;;;;;;;;;;;;;;;;;;; 项目 ;;;;;;;;;;;;;;;;;;;;
 
@@ -572,7 +582,21 @@
            evil           ; If you use Evil.
            paredit        ; Introduce some paredit commands.
            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-           smart-yank)))  ; Yank behavior depend on mode.
+           smart-yank))   ; Yank behavior depend on mode.
+  ;; parinfer smart-tab extension 的 evil 集成有 bug：用了 evil-define-key（宏）
+  ;; 而非 evil-define-key*（函数），导致 evil 延迟加载后打开 lisp 文件时报错
+  ;; (invalid-function evil-define-key)，中断 mode 初始化，丢失语法高亮。
+  (with-eval-after-load 'parinfer-ext
+    (defun parinfer-ext::smart-tab:mount ()
+      (add-hook 'post-command-hook 'parinfer-smart-tab:clean-indicator t t)
+      (add-hook 'pre-command-hook 'parinfer-smart-tab:clean-indicator-pre t t)
+      (define-key parinfer-mode-map [remap forward-char] 'parinfer-smart-tab:forward-char)
+      (define-key parinfer-mode-map [remap backward-char] 'parinfer-smart-tab:backward-char)
+      (define-key parinfer-region-mode-map [remap parinfer-shift-right] 'parinfer-smart-tab:shift-right)
+      (define-key parinfer-region-mode-map [remap parinfer-shift-left] 'parinfer-smart-tab:shift-left)
+      (when (fboundp 'evil-define-key*)
+        (evil-define-key* 'insert parinfer-region-mode-map [remap evil-shift-right-line] 'parinfer-smart-tab:shift-right)
+        (evil-define-key* 'insert parinfer-region-mode-map [remap evil-shift-left-line] 'parinfer-smart-tab:shift-left)))))
 
 (c4:use rainbow-delimiters
   :straight t

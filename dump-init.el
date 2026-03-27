@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (load "~/.emacsrc/lib/dump-utils.el")
 
 (add-to-list 'dump/stash-modes '(global-undo-tree-mode))

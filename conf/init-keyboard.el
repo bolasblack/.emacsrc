@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; -*- Emacs-Lisp -*-
 (require 'do-if)
 (require 'osx-clipboard)

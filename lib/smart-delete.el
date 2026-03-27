@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;; -*- Emacs-Lisp -*-
 
 (provide 'smart-delete)

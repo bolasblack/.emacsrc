@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (provide 'initvar)
 
 (defun initvar (symbol &optional default-val)

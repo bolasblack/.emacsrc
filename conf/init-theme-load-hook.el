@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (provide-me)
 
 (defvar after-load-theme-hook nil

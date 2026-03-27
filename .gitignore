@@ -7,3 +7,4 @@
 *.lib
 .cask
 flycheck_*.*
+.claude/settings.local.json

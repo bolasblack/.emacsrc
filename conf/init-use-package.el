@@ -7,8 +7,9 @@
 (provide-me)
 
 (setq use-package-verbose t)
-(setq use-package-compute-statistics t)
+(setq use-package-compute-statistics nil)
 (setq use-package-inject-hooks t)
+(setq use-package-expand-minimally nil)
 
 (straight-use-package 'use-package)
 
